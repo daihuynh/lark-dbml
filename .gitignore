@@ -1,0 +1,54 @@
+# Mac
+.DS_Store
+
+# Python
+# Compiled Python files
+__pycache__/
+*.pyc
+*.pyd
+*.pyo
+
+# Virtual environment
+# Recommended: .venv is a common name for virtual environments
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Dependencies
+# Pip install generates this file, best to recreate it than commit it.
+# However, if you're using Pipenv or Poetry, their lock files *should* be committed.
+# e.g., Pipfile.lock, poetry.lock
+requirements.txt # If you regenerate this from a lock file, otherwise commit it for reproducibility
+
+# Distribution / Packaging
+.Python
+build/
+develop-eggs/
+dist/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Specific to Pytest (including coverage and reports)
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.nox/
+.pytest_version
+.benchmarks/ # If you use pytest-benchmark
+
+# Editors and IDEs
+# VS Code
+.vscode

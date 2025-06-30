@@ -1,0 +1,7 @@
+Project my_project {
+    database_type: 'Generic'
+    Note: '''
+        Version: 1.0.0
+        Release: 01/01/2025
+    '''
+}

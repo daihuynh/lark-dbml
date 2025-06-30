@@ -1,0 +1,13 @@
+enum v2.job_status {
+    created [note: 'Waiting to be processed']
+    running
+    done
+    failure
+}
+
+enum grade {
+    "A+"
+    "A"
+    "A-"
+    "Not Yet Set"
+}

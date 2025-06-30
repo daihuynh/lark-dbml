@@ -1,0 +1,47 @@
+[project]
+name = "lark-dbml"
+version = "0.1.0"
+description = "DBML parser using Lark."
+license = "MIT"
+authors = [
+    { name = "Austin Huynh", email = "contact@austinhuynh.me" },
+]
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Developers",
+    "Topic :: Text Processing",
+    "Topic :: Software Development :: Code Generators",
+]
+dependencies = [
+    "lark>=1.2.2",
+    "pydantic~=2.11",
+]
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"] # Add wheel as well, it's often needed
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["lark_dbml*"]
+exclude = ["tests/**"]
+
+[tool.setuptools.package-data]
+"lark_dbml" = ["*.lark"]
+
+[dependency-groups]
+dev = [
+    "coverage>=7.9.1",
+    "pre-commit>=4.2.0",
+    "pytest>=8.4.1",
+    "pytest-cov>=6.2.1",
+    "twine>=6.1.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/daihuynh/lark-dbml"
+"Bug Tracker" = "https://github.com/daihuynh/lark-dbml/issues"

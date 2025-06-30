@@ -1,0 +1,5 @@
+Ref name_optional {
+    schema1.table1.(column1, column2) < schema2.table2.(column1, column2) [delete: cascade, update: no action, color: #79AD51]
+}
+
+Ref: schema1.table1.column1 < schema2.table2.column2

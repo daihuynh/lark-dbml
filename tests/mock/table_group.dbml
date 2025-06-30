@@ -1,0 +1,12 @@
+TableGroup e_commerce [note: 'Contains tables that are related to e-commerce system'] {
+    merchants
+    countries
+}
+
+TableGroup tablegroup_name { // tablegroup is case-insensitive.
+    table1
+    table2
+    table3
+
+    Note: 'Contains tables that are related to e-commerce system'
+}

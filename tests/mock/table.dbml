@@ -1,0 +1,18 @@
+Table TableA [note: 'This is table A'] {
+  Id             varchar(10)   [primary key, not null]
+  BId            varchar(10)   [ref: > TableB.Id]
+  Name           "super string"  [unique, note: 'Name']
+  IntValue       integer       [null, note: 'Integer Value']
+  DecimalValue   decimal(10,2) [default: 10.24]
+  DateValue      date
+  DateTimeValue  datetime
+}
+
+Table TableB as B {
+  Id             varchar(10)   [primary key, not null]
+}
+
+Table TableC as C {
+  ~TableB
+  Name           "super string"  [unique, note: 'Name']
+}

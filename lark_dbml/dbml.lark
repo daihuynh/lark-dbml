@@ -1,0 +1,99 @@
+
+start: (project | table | table_partial | reference | enum | note | group)+
+
+// 1. Forms
+project: ("Project" | "project") name "{" pair+ "}"
+enum: ("Enum" | "enum") name "{" enum_value+ "}"
+reference: ("Ref" | "ref") name? "{" ref settings? "}"
+         | ("Ref" | "ref") name? ":" ref settings?
+group: ("TableGroup" | "tablegroup") name settings? "{" (name | note_inline)* "}"
+note: ("Note" | "note") name "{" (STRING | MULTILINE_STRING) "}"
+table_partial: "TablePartial" name settings? "{" column* indexes? "}"
+table: ("Table" | "table") name alias? settings? "{" (column | table_partial_ref | note_inline)* indexes?  "}"
+
+
+// 2. Common
+name: (IDENTIFIER | STRING)
+     | (IDENTIFIER | STRING) "." (IDENTIFIER | STRING)
+
+?pair: key ":" value
+
+?key: (IDENTIFIER | STRING)
+
+?value: IDENTIFIER
+      | STRING
+      | MULTILINE_STRING
+      | NUMBER
+      | "true"
+      | "false"
+      | FUNC_EXP
+      | COLOR_HEX
+      | REFERENTIAL_ACTION
+
+settings: "[" pair ("," pair)* "]"
+
+// 3. Components
+?table_partial_ref: "~" IDENTIFIER
+
+alias: "as" IDENTIFIER
+
+column: (IDENTIFIER | STRING) (data_type | name)  column_settings?
+
+data_type: value ("(" INT ("," INT)? ")")?
+
+column_settings: "[" column_setting ("," column_setting)*  "]"
+
+column_setting: column_constraint
+              | pair
+              | "ref" ":" ref_inline
+
+column_constraint: "primary key" -> is_primary_key
+                  | "pk" -> is_primary_key
+                  | "null" -> is_null
+                  | "not null" -> is_not_null
+                  | "unique" -> is_unique
+                  | "increment" -> is_increment
+
+ref: name"."ref_col ref_inline
+
+?ref_inline: RELATIONSHIP name"."ref_col
+
+?ref_col: (IDENTIFIER | STRING)
+        | "(" IDENTIFIER ("," IDENTIFIER)* ")"
+
+indexes: ("Indexes" | "indexes") "{" index+ "}"
+
+index: (ref_col | index_exp) column_settings?
+
+?index_exp: "(" FUNC_EXP ("," (FUNC_EXP | IDENTIFIER) )* ")"
+
+enum_value: key settings?
+
+note_inline: ("Note" | "note") ":" STRING
+
+// --- Terminal Definitions (The actual text patterns) ---
+REFERENTIAL_ACTION: "cascade"
+                  | "restrict"
+                  | "set null"
+                  | "set default"
+                  | "no action"
+
+RELATIONSHIP: "-" | "<" | ">" | "<>"
+IDENTIFIER: /[a-zA-Z_][a-zA-Z0-9_]*/
+            | "`" /[a-zA-Z0-9_]+/ "`"
+STRING: /'[^']*'/ | /"[^"]*"/
+MULTILINE_STRING: /(?s)'''(.*?)'''/
+FUNC_EXP: /`[^`]*`/
+COLOR_HEX: "#" /[0-9a-fA-F]{6}/
+         | "#" /[0-9a-fA-F]{3}/
+
+// --- Import and Ignore Directives ---
+%import common.INT
+%import common.NUMBER
+%import common.WS
+%import common.CPP_COMMENT
+%import common.C_COMMENT
+
+%ignore WS
+%ignore CPP_COMMENT
+%ignore C_COMMENT
