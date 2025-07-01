@@ -21,26 +21,26 @@ def test_reference(mock_path):
 
     ref = diagram.references[0]
     assert ref.name == "name_optional"
-    assert ref.details.from_table.db_schema == "schema1"
-    assert ref.details.from_table.name == "table1"
-    assert ref.details.from_columns == ["column1", "column2"]
-    assert ref.details.relationship == "<"
-    assert ref.details.to_table.db_schema == "schema2"
-    assert ref.details.to_table.name == "table2"
-    assert ref.details.to_columns == ["column1", "column2"]
+    assert ref.from_table.db_schema == "schema1"
+    assert ref.from_table.name == "table1"
+    assert ref.from_columns == ["column1", "column2"]
+    assert ref.relationship == "<"
+    assert ref.to_table.db_schema == "schema2"
+    assert ref.to_table.name == "table2"
+    assert ref.to_columns == ["column1", "column2"]
     assert ref.settings.delete == "cascade"
     assert ref.settings.update == "no action"
     assert ref.settings.color == "#79AD51"
 
     ref = diagram.references[1]
     assert ref.name is None
-    assert ref.details.from_table.db_schema == "schema1"
-    assert ref.details.from_table.name == "table1"
-    assert ref.details.from_columns == "column1"
-    assert ref.details.relationship == "<"
-    assert ref.details.to_table.db_schema == "schema2"
-    assert ref.details.to_table.name == "table2"
-    assert ref.details.to_columns == "column2"
+    assert ref.from_table.db_schema == "schema1"
+    assert ref.from_table.name == "table1"
+    assert ref.from_columns == ["column1"]
+    assert ref.relationship == "<"
+    assert ref.to_table.db_schema == "schema2"
+    assert ref.to_table.name == "table2"
+    assert ref.to_columns == ["column2"]
 
 
 def test_enum(mock_path):
@@ -142,7 +142,7 @@ def test_table_partial(mock_path):
     assert table.columns[1].data_type.length == 10
     assert table.columns[1].data_type.scale == 5
     assert len(table.indexes) == 2
-    assert table.indexes[0].columns == "email"
+    assert table.indexes[0].columns == ["email"]
     assert table.indexes[0].settings.name == "email_idx"
     assert table.indexes[0].settings.idx_type == "hash"
     assert table.indexes[0].settings.is_unique
@@ -186,7 +186,7 @@ def test_table(mock_path):
     assert table.columns[0].settings.is_primary_key
     assert not table.columns[0].settings.is_null
     assert table.columns[1].settings.ref.to_table.name == "TableB"
-    assert table.columns[1].settings.ref.to_columns == "Id"
+    assert table.columns[1].settings.ref.to_columns == ["Id"]
     assert table.columns[2].settings.is_unique
     assert table.columns[3].settings.is_null
     assert table.columns[4].settings.default == 10.24
@@ -209,7 +209,7 @@ def test_table(mock_path):
     assert table.columns[0].name == "IntValue"
     assert table.columns[0].data_type.sql_type == "integer"
     assert table.columns[0].settings.ref.to_table.name == "TableA"
-    assert table.columns[0].settings.ref.to_columns == "IntValue"
+    assert table.columns[0].settings.ref.to_columns == ["IntValue"]
 
     # 4. TableC
     table = diagram.tables[1]

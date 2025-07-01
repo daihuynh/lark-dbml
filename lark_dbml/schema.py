@@ -47,11 +47,7 @@ class Note(Noteable):
 
 
 # Relationship
-class Relationship(BaseModel):
-    from_table: Name | None = None
-    from_columns: Annotated[
-        List[str], BeforeValidator(lambda v: v if not v or isinstance(v, List) else [v])
-    ] = None
+class ReferenceInline(BaseModel):
     relationship: Literal["-", ">", "<", "<>"]
     to_table: Name
     to_columns: Annotated[
@@ -69,9 +65,12 @@ class ReferenceSettings(Settings):
     color: str | None = None  # For rendering
 
 
-class Reference(Name):
-    details: Relationship
+class Reference(Name, ReferenceInline):
     settings: ReferenceSettings | None = None
+    from_table: Name | None = None
+    from_columns: Annotated[
+        List[str], BeforeValidator(lambda v: v if not v or isinstance(v, List) else [v])
+    ] = None
 
 
 # Table
@@ -87,7 +86,7 @@ class ColumnSettings(Settings):
     is_unique: bool = False
     is_increment: bool = False
     default: Any | None = None
-    ref: Relationship | None = None
+    ref: ReferenceInline | None = None
 
 
 class Column(Name):

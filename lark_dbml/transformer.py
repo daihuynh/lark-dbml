@@ -175,14 +175,12 @@ class DBMLTransformer(Transformer[Token, Diagram]):
             relationship = vars[1]
             settings = ReferenceSettings.model_validate(vars[2]["settings"])
 
-        return Reference.model_validate(
-            {
-                "db_schema": name_dict.get("db_schema"),
-                "name": name_dict.get("name"),
-                "details": relationship["ref"],
-                "settings": settings,
-            }
-        )
+        data = {
+            "db_schema": name_dict.get("db_schema"),
+            "name": name_dict.get("name"),
+            "settings": settings,
+        } | relationship["ref"]
+        return Reference.model_validate(data)
 
     # ====== TABLE ======
     def is_primary_key(self, *_):
