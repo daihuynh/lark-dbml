@@ -1,6 +1,6 @@
 [project]
 name = "lark-dbml"
-version = "0.1.1"
+version = "0.2.0"
 description = "DBML parser using Lark."
 license = "MIT"
 authors = [
