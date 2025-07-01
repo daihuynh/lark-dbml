@@ -1,5 +1,5 @@
-from typing import Any, Literal
-from pydantic import BaseModel, ConfigDict, Field
+from typing import Any, Annotated, Literal, List
+from pydantic import BaseModel, ConfigDict, Field, BeforeValidator
 from pydantic.aliases import AliasChoices
 
 
@@ -49,10 +49,10 @@ class Note(Noteable):
 # Relationship
 class Relationship(BaseModel):
     from_table: Name | None = None
-    from_columns: str | list[str] | None = None
+    from_columns: Annotated[List[str], BeforeValidator(lambda v: v if not v or isinstance(v, List) else [v])] = None
     relationship: Literal["-", ">", "<", "<>"]
     to_table: Name
-    to_columns: str | list[str]
+    to_columns: Annotated[List[str], BeforeValidator(lambda v: v if not v or isinstance(v, List) else [v])] = None
 
 
 class ReferenceSettings(Settings):
