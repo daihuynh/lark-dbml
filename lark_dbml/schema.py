@@ -1,5 +1,5 @@
-from typing import Any, Literal
-from pydantic import BaseModel, ConfigDict, Field
+from typing import Any, Annotated, Literal, List
+from pydantic import BaseModel, ConfigDict, Field, BeforeValidator
 from pydantic.aliases import AliasChoices
 
 
@@ -27,7 +27,7 @@ class Project(Name, Noteable):
 
 # TableGroup
 class TableGroup(Name, Noteable):
-    tables: list[Name]
+    tables: List[Name]
     settings: Settings | None = None
 
 
@@ -38,7 +38,7 @@ class EnumValue(BaseModel):
 
 
 class Enum(Name):
-    values: list[EnumValue]
+    values: List[EnumValue]
 
 
 # Sticky Note
@@ -49,10 +49,14 @@ class Note(Noteable):
 # Relationship
 class Relationship(BaseModel):
     from_table: Name | None = None
-    from_columns: str | list[str] | None = None
+    from_columns: Annotated[
+        List[str], BeforeValidator(lambda v: v if not v or isinstance(v, List) else [v])
+    ] = None
     relationship: Literal["-", ">", "<", "<>"]
     to_table: Name
-    to_columns: str | list[str]
+    to_columns: Annotated[
+        List[str], BeforeValidator(lambda v: v if not v or isinstance(v, List) else [v])
+    ] = None
 
 
 class ReferenceSettings(Settings):
@@ -99,7 +103,9 @@ class IndexSettings(Settings):
 
 
 class Index(BaseModel):
-    columns: str | list[str]
+    columns: Annotated[
+        List[str], BeforeValidator(lambda v: v if not v or isinstance(v, List) else [v])
+    ] = None
     settings: IndexSettings | None = None
 
 
@@ -110,22 +116,22 @@ class TableSettings(Settings):
 
 
 class TablePartial(Name):
-    columns: list[Column]
-    indexes: list[Index] | None = None
+    columns: List[Column]
+    indexes: List[Index] | None = None
     settings: TableSettings | None = None
 
 
 class Table(TablePartial, Noteable):
     alias: str | None = None
-    table_partials: list[str] | None = None
+    table_partials: List[str] | None = None
 
 
 # Diagram
 class Diagram(BaseModel):
     project: Project | None = None
-    enums: list[Enum] | None = []
-    table_groups: list[TableGroup] | None = []
-    sticky_notes: list[Note] | None = []
-    references: list[Reference] | None = []
-    tables: list[Table] | None = []
-    table_partials: list[TablePartial] | None = []
+    enums: List[Enum] | None = []
+    table_groups: List[TableGroup] | None = []
+    sticky_notes: List[Note] | None = []
+    references: List[Reference] | None = []
+    tables: List[Table] | None = []
+    table_partials: List[TablePartial] | None = []
