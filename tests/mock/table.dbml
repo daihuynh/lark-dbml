@@ -8,11 +8,18 @@ Table TableA [note: 'This is table A'] {
   DateTimeValue  datetime
 }
 
-Table TableB as B {
+TablePartial TableB {
   Id             varchar(10)   [primary key, not null]
 }
 
-Table TableC as C {
+TablePartial TableC {
+  IntValue        integer   [ref: - TableA.IntValue]
+}
+
+Table "schema1"."Table D" as D {
   ~TableB
   Name           "super string"  [unique, note: 'Name']
+  ~TableC
+
+  Note: 'Includes TableB & TableC'
 }

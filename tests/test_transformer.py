@@ -33,7 +33,7 @@ def test_reference(mock_path):
     assert ref.settings.color == "#79AD51"
 
     ref = diagram.references[1]
-    assert ref.name is None, "Relationship Transformer: wrong relationship name"
+    assert ref.name is None
     assert ref.details.from_table.db_schema == "schema1"
     assert ref.details.from_table.name == "table1"
     assert ref.details.from_columns == "column1"
@@ -154,7 +154,8 @@ def test_table(mock_path):
     diagram = load(mock_path / "table.dbml")
 
     # 'project literal included'
-    assert len(diagram.tables) == 3
+    assert len(diagram.tables) == 2
+    assert len(diagram.table_partials) == 2
 
     # 1. TableA
     table = diagram.tables[0]
@@ -193,21 +194,30 @@ def test_table(mock_path):
     assert table.columns[2].settings.note == "Name"
     assert table.columns[3].settings.note == "Integer Value"
 
-    # 2. TableB
-    table = diagram.tables[1]
+    # 2. TablePartial B
+    table = diagram.table_partials[0]
     assert table.name == "TableB"
-    assert table.alias == "B", "Alias must be B"
-    assert table.columns[0].name == "Id", "First column must be Id"
+    assert table.columns[0].name == "Id"
     assert table.columns[0].data_type.sql_type == "varchar"
     assert table.columns[0].data_type.length == 10
     assert table.columns[0].settings.is_primary_key
     assert not table.columns[0].settings.is_null
 
-    # 2. TableC
-    table = diagram.tables[2]
+    # 2. TableParital C
+    table = diagram.table_partials[1]
     assert table.name == "TableC"
-    assert table.alias == "C"
+    assert table.columns[0].name == "IntValue"
+    assert table.columns[0].data_type.sql_type == "integer"
+    assert table.columns[0].settings.ref.to_table.name == "TableA"
+    assert table.columns[0].settings.ref.to_columns == "IntValue"
+
+    # 4. TableC
+    table = diagram.tables[1]
+    assert table.db_schema == "schema1"
+    assert table.name == "Table D"
+    assert table.alias == "D"
     assert table.columns[0].name == "Name"
     assert table.columns[0].data_type.sql_type == "super string"
-    assert len(table.table_partials) == 1
-    assert table.table_partials[0] == "TableB"
+    assert len(table.table_partials) == 2
+    assert table.table_partials == ["TableB", "TableC"]
+    assert table.note == "Includes TableB & TableC"

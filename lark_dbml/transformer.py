@@ -256,10 +256,10 @@ class DBMLTransformer(Transformer[Token, Diagram]):
     def table_partial(self, name, *vars) -> TablePartial:
         data = name | {"columns": []}
         for var in vars:
-            if "settings" in var or "indexes" in var:
-                data.update(var)
-            else:
+            if "column" in var:
                 data["columns"].append(var["column"])
+            else:
+                data.update(var)
         return TablePartial.model_validate(data)
 
     @v_args(inline=True)
@@ -267,14 +267,14 @@ class DBMLTransformer(Transformer[Token, Diagram]):
     def table(self, name, *vars) -> Table:
         data = name | {"columns": []}
         for var in vars:
-            if "alias" in var or "settings" in var or "indexes" in var:
-                data.update(var)
-            elif "column" in var:
+            if "column" in var:
                 data["columns"].append(var["column"])
-            else:
+            elif isinstance(var, str):
                 table_partials = data.get("table_partials", [])
                 table_partials.append(var)
                 data["table_partials"] = table_partials
+            else:
+                data.update(var)
         return Table.model_validate(data)
 
     # ====== DIAGRAM ======
