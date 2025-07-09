@@ -59,7 +59,7 @@ ref: name"."ref_col ref_inline
 ?ref_inline: RELATIONSHIP name"."ref_col
 
 ?ref_col: (IDENTIFIER | STRING)
-        | "(" IDENTIFIER ("," IDENTIFIER)* ")"
+        | "(" (IDENTIFIER | STRING) ("," (IDENTIFIER | STRING))* ")"
 
 indexes: ("Indexes" | "indexes") "{" index+ "}"
 
