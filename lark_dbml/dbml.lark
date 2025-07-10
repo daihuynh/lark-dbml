@@ -59,13 +59,13 @@ ref: name"."ref_col ref_inline
 ?ref_inline: RELATIONSHIP name"."ref_col
 
 ?ref_col: (IDENTIFIER | STRING)
-        | "(" IDENTIFIER ("," IDENTIFIER)* ")"
+        | "(" (IDENTIFIER | STRING) ("," (IDENTIFIER | STRING))* ")"
 
 indexes: ("Indexes" | "indexes") "{" index+ "}"
 
 index: (ref_col | index_exp) column_settings?
 
-?index_exp: "(" FUNC_EXP ("," (FUNC_EXP | IDENTIFIER) )* ")"
+?index_exp: "(" (FUNC_EXP | IDENTIFIER) ("," (FUNC_EXP | IDENTIFIER) )* ")"
 
 enum_value: key settings?
 
@@ -81,7 +81,7 @@ REFERENTIAL_ACTION: "cascade"
 RELATIONSHIP: "-" | "<" | ">" | "<>"
 IDENTIFIER: /[a-zA-Z_][a-zA-Z0-9_]*/
             | "`" /[a-zA-Z0-9_]+/ "`"
-STRING: /'[^']*'/ | /"[^"]*"/
+STRING: /'([^'\\]|\\.)*'/ | /"([^"\\]|\\.)*"/
 MULTILINE_STRING: /(?s)'''(.*?)'''/
 FUNC_EXP: /`[^`]*`/
 COLOR_HEX: "#" /[0-9a-fA-F]{6}/
