@@ -1,0 +1,80 @@
+Project example {
+  database_type: 'postgres'
+  note: 'Example project for lark-dbml parser'
+}
+
+Enum "example"."answer" {
+  "n/a"
+  "yes"
+  "no"
+}
+
+Table "another"."user" {
+  id int [pk, increment]
+  name text
+
+  indexes {
+    name [name: 'idx_user_name', unique]
+  }
+}
+
+Table "example"."option" {
+  id int [pk, increment]
+  seq int
+  content text
+
+  indexes {
+    seq            [name: 'idx_option_seq']
+    (seq, content) [name: 'idx_option_seq_content', unique]
+  }
+}
+
+Table "example"."question" {
+  id int [pk, increment]
+  content text
+  option_id int
+
+  indexes {
+    content [name: 'idx_question_content']
+  }
+}
+
+Table "example"."questionare" {
+  id int [pk, increment]
+  name text
+  question_id int
+
+  indexes {
+    name [name: 'idx_questionare_name']
+  }
+}
+
+Table "example"."user_survey" {
+  id int [increment]
+  user_id int
+  questionare_id int
+  submission_date timestamp [default: `now()`]
+  answer_given "example"."answer"
+
+  indexes {
+    (user_id, questionare_id) [pk]
+    submission_date           [name: 'idx_user_survey_submission_date']
+    answer_given              [name: 'idx_user_survey_answer_given']
+  }
+}
+
+Ref fk_questionare_question {
+  "example"."questionare".question_id > "example"."question".id
+}
+
+Ref fk_question_option {
+  "example"."question".option_id > "example"."option".id
+}
+
+Ref fk_user_survey_user {
+  "example"."user_survey".user_id > "another"."user".id
+}
+
+Ref fk_user_survey_questionare {
+  "example"."user_survey".questionare_id > "example"."questionare".id
+}
