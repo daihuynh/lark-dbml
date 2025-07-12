@@ -60,3 +60,4 @@ CREATE TABLE "example"."user_survey" (
 CREATE INDEX "idx_user_survey_submission_date" ON "example"."user_survey"("submission_date");
 
 CREATE INDEX "idx_user_survey_answer_given" ON "example"."user_survey"("answer_given");
+
