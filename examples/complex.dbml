@@ -9,9 +9,13 @@ Enum "example"."answer" {
   "no"
 }
 
-Table "another"."user" {
+TablePartial BaseTable {
   id int [pk, increment]
-  name text
+}
+
+Table "another"."user" {
+  ~BaseTable
+  name text [unique]
 
   indexes {
     name [name: 'idx_user_name', unique]
@@ -19,7 +23,7 @@ Table "another"."user" {
 }
 
 Table "example"."option" {
-  id int [pk, increment]
+  ~BaseTable
   seq int
   content text
 
@@ -30,7 +34,7 @@ Table "example"."option" {
 }
 
 Table "example"."question" {
-  id int [pk, increment]
+  ~BaseTable
   content text
   option_id int
 
@@ -40,7 +44,7 @@ Table "example"."question" {
 }
 
 Table "example"."questionare" {
-  id int [pk, increment]
+  ~BaseTable
   name text
   question_id int
 
@@ -51,7 +55,7 @@ Table "example"."questionare" {
 
 Table "example"."user_survey" {
   id int [increment]
-  user_id int
+  user_id int [ref: > "another"."user".id]
   questionare_id int
   submission_date timestamp [default: `now()`]
   answer_given "example"."answer"
@@ -64,15 +68,11 @@ Table "example"."user_survey" {
 }
 
 Ref fk_questionare_question {
-  "example"."questionare".question_id > "example"."question".id
+  "example"."questionare".question_id > "example"."question".id [delete: cascade]
 }
 
 Ref fk_question_option {
-  "example"."question".option_id > "example"."option".id
-}
-
-Ref fk_user_survey_user {
-  "example"."user_survey".user_id > "another"."user".id
+  "example"."question".option_id > "example"."option".id [update: no action]
 }
 
 Ref fk_user_survey_questionare {
