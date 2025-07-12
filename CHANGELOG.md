@@ -1,29 +1,44 @@
-# Changelog
+<!-- insertion marker -->
+<a name="v0.3.0"></a>
 
-All notable changes to this project will be documented in this file.
+## [v0.3.0](https://github.com/daihuynh/lark-dbml/compare/v0.2.0...v0.3.0) (2025-07-12)
 
-The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
-and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+<small>[Compare with latest](https://github.com/daihuynh/lark-dbml/compare/v0.2.0...HEAD)</small>
 
-## [v0.2.0](https://github.com/daihuynh/lark-dbml/releases/tag/v0.2.0) - 2025-07-01
+### Features
 
-<small>[Compare with v0.1.0](https://github.com/daihuynh/lark-dbml/compare/v0.1.1...v0.2.2)</small>
+- Add sqlglot for SQL converter as an optional dependency ([59c0070](https://github.com/daihuynh/lark-dbml/commit/59c0070d9a4fa9d5d1a939c2748953c7828320b7) by Austin Huynh).
+- SQL Converter ([3496a82](https://github.com/daihuynh/lark-dbml/commit/3496a826ceca8eeafaee77aae03703f51832c8a0) by Austin Huynh).
+- add unit testing pipeline ([85d0da5](https://github.com/daihuynh/lark-dbml/commit/85d0da593c2ba28cc04fe9edbed38992fe1aad31) by Austin Huynh).
 
 ### Bug Fixes
 
-- relationship from_columns and to_columns ([9510b9e](https://github.com/daihuynh/lark-dbml/commit/9510b9e29a97e1f6d8b71ccfd0ce10712c626d9f) by Austin Huynh).
-- Table transformation ([0c9d3ac](https://github.com/daihuynh/lark-dbml/commit/0c9d3ac5ee99cf499ef1e491ac7a1d951af10469) by Austin Huynh).
+- Referenced column allow quoted string values ([f2af26d](https://github.com/daihuynh/lark-dbml/commit/f2af26d0f8c17fd21e1161de71b627b0ac688510) by Austin Huynh).
+- multiple column ref supports string type too ([2d76da9](https://github.com/daihuynh/lark-dbml/commit/2d76da936c1bd30992be60795a0663a178c0714f) by Austin Huynh).
 
 ### Code Refactoring
 
-- test cases to comply changes ([c4d6465](https://github.com/daihuynh/lark-dbml/commit/c4d64650db21623fa96b2449f81cb1d30b397574) by Austin Huynh).
-- rename Relationship to ReferenceInline refactor: simplify Reference's data layout ([b2795d0](https://github.com/daihuynh/lark-dbml/commit/b2795d0024c03f9af172815a8cdcdd28516c7f77) by Austin Huynh).
-- change list type to typing.List fix: Index columns should be a list of column names to be consistent with the name ([cc319df](https://github.com/daihuynh/lark-dbml/commit/cc319df3ad65ac9cb1861e6ee865c11be4ccb993) by Austin Huynh).
+- pre-commit should not fix end of file for SQL files in expectation folder ([30c92f2](https://github.com/daihuynh/lark-dbml/commit/30c92f28482abbab9332f9abcc4b10c325274a5f) by Austin Huynh).
+- move dbml files from mock to examples folder in the project root ([ea08dea](https://github.com/daihuynh/lark-dbml/commit/ea08deaa35c094398faf3053cc890c84cf5cde08) by Austin Huynh).
 
-## [v0.1.1](https://github.com/daihuynh/lark-dbml/releases/tag/v0.1.1) - 2025-06-30
+<!-- insertion marker -->
 
-<small>[Compare with v0.1.0](https://github.com/daihuynh/lark-dbml/compare/v0.1.0...v0.1.1)</small>
+<a name="v0.2.0"></a>
 
-## [v0.1.0](https://github.com/daihuynh/lark-dbml/releases/tag/v0.1.0) - 2025-06-30
+## [v0.2.0](https://github.com/daihuynh/lark-dbml/compare/v0.1.1...v0.2.0) (2025-07-01)
 
-<small>[Compare with first commit](https://github.com/daihuynh/lark-dbml/compare/7551b9fc12e2fc49cc7eaf613bb083655d52347a...v0.1.0)</small>
+### Added
+-  ([133880e](https://github.com/daihuynh/lark-dbml/commit/133880e05b56600b8cac6063f6b7be21f71fcac1))
+
+### Fixed
+
+-  ([9510b9e](https://github.com/daihuynh/lark-dbml/commit/9510b9e29a97e1f6d8b71ccfd0ce10712c626d9f))
+-  ([0c9d3ac](https://github.com/daihuynh/lark-dbml/commit/0c9d3ac5ee99cf499ef1e491ac7a1d951af10469))
+
+<a name="v0.1.1"></a>
+
+## [v0.1.1](https://github.com/daihuynh/lark-dbml/compare/v0.1.0...v0.1.1) (2025-06-30)
+
+<a name="v0.1.0"></a>
+
+## [v0.1.0](https://github.com/daihuynh/lark-dbml/compare/7551b9fc12e2fc49cc7eaf613bb083655d52347a...v0.1.0) (2025-06-30)
