@@ -1,8 +1,8 @@
 from lark_dbml import load
 
 
-def test_project(mock_path):
-    diagram = load(mock_path / "project.dbml")
+def test_project(example_path):
+    diagram = load(example_path / "project.dbml")
 
     # 'project literal included'
     assert diagram.project
@@ -13,8 +13,8 @@ def test_project(mock_path):
     assert project.note == ("Version: 1.0.0\n        Release: 01/01/2025")
 
 
-def test_reference(mock_path):
-    diagram = load(mock_path / "ref.dbml")
+def test_reference(example_path):
+    diagram = load(example_path / "ref.dbml")
 
     # 'project literal included'
     assert len(diagram.references) == 2
@@ -43,8 +43,8 @@ def test_reference(mock_path):
     assert ref.to_columns == ["column2"]
 
 
-def test_enum(mock_path):
-    diagram = load(mock_path / "enum.dbml")
+def test_enum(example_path):
+    diagram = load(example_path / "enum.dbml")
 
     assert len(diagram.enums) == 2
 
@@ -68,8 +68,8 @@ def test_enum(mock_path):
     assert enum.values[3].value == "Not Yet Set"
 
 
-def test_table_group(mock_path):
-    diagram = load(mock_path / "table_group.dbml")
+def test_table_group(example_path):
+    diagram = load(example_path / "table_group.dbml")
 
     assert len(diagram.table_groups) == 2
 
@@ -91,8 +91,8 @@ def test_table_group(mock_path):
     assert group.note == "Contains tables that are related to e-commerce system"
 
 
-def test_sticky_note(mock_path):
-    diagram = load(mock_path / "sticky_note.dbml")
+def test_sticky_note(example_path):
+    diagram = load(example_path / "sticky_note.dbml")
 
     assert len(diagram.sticky_notes) == 2
     assert diagram.sticky_notes[0].note == "This is a single line note"
@@ -101,8 +101,8 @@ def test_sticky_note(mock_path):
     )
 
 
-def test_table_partial(mock_path):
-    diagram = load(mock_path / "table_partial.dbml")
+def test_table_partial(example_path):
+    diagram = load(example_path / "table_partial.dbml")
 
     assert len(diagram.table_partials) == 3
     table = diagram.table_partials[0]
@@ -150,8 +150,8 @@ def test_table_partial(mock_path):
     assert table.indexes[1].columns == ["`sum(value)`", "email"]
 
 
-def test_table(mock_path):
-    diagram = load(mock_path / "table.dbml")
+def test_table(example_path):
+    diagram = load(example_path / "table.dbml")
 
     # 'project literal included'
     assert len(diagram.tables) == 2
