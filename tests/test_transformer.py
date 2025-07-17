@@ -2,9 +2,9 @@ from lark_dbml import load
 
 
 def test_project(example_path):
-    diagram = load(example_path / "project.dbml")
+    with open(example_path / "project.dbml") as f:
+        diagram = load(f)
 
-    # 'project literal included'
     assert diagram.project
 
     project = diagram.project
@@ -16,8 +16,7 @@ def test_project(example_path):
 def test_reference(example_path):
     diagram = load(example_path / "ref.dbml")
 
-    # 'project literal included'
-    assert len(diagram.references) == 2
+    assert len(diagram.references) == 3
 
     ref = diagram.references[0]
     assert ref.name == "name_optional"
@@ -41,6 +40,17 @@ def test_reference(example_path):
     assert ref.to_table.db_schema == "schema2"
     assert ref.to_table.name == "table2"
     assert ref.to_columns == ["column2"]
+
+    ref = diagram.references[2]
+    assert ref.name is None
+    assert ref.from_table.db_schema == "schema1"
+    assert ref.from_table.name == "table1"
+    assert ref.from_columns == ["column1"]
+    assert ref.relationship == "<"
+    assert ref.to_table.db_schema == "schema2"
+    assert ref.to_table.name == "table2"
+    assert ref.to_columns == ["column2"]
+    assert ref.settings.color == "#0f0"
 
 
 def test_enum(example_path):
@@ -95,7 +105,9 @@ def test_sticky_note(example_path):
     diagram = load(example_path / "sticky_note.dbml")
 
     assert len(diagram.sticky_notes) == 2
+    assert diagram.sticky_notes[0].name == "single_line_note"
     assert diagram.sticky_notes[0].note == "This is a single line note"
+    assert diagram.sticky_notes[1].name == "multiple_lines_note"
     assert diagram.sticky_notes[1].note == (
         "This is a multiple lines note\n    This string can spans over multiple lines."
     )
@@ -153,7 +165,6 @@ def test_table_partial(example_path):
 def test_table(example_path):
     diagram = load(example_path / "table.dbml")
 
-    # 'project literal included'
     assert len(diagram.tables) == 2
     assert len(diagram.table_partials) == 2
 
@@ -218,6 +229,9 @@ def test_table(example_path):
     assert table.alias == "D"
     assert table.columns[0].name == "Name"
     assert table.columns[0].data_type.sql_type == "super string"
+    assert table.columns[1].name == "When"
+    assert table.columns[1].data_type.sql_type == "datetime"
+    assert table.columns[1].settings.default == "`now()`"
     assert len(table.table_partials) == 2
     assert table.table_partials == ["TableB", "TableC"]
     assert table.note == "Includes TableB & TableC"
