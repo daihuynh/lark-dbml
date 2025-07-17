@@ -122,7 +122,26 @@ class ColumnConverter(BaseSQLConverter[Column]):
                     kind=(type_name if " " not in type_name else f'"{type_name}"'),
                 )
             case _:
-                kind = exp.DataType(this=data_type, nested=False)
+                expressions = []
+                if column.data_type.length:
+                    expressions.append(
+                        exp.DataTypeParam(
+                            this=exp.Literal(
+                                this=column.data_type.length, is_string=False
+                            )
+                        )
+                    )
+                if column.data_type.scale:
+                    expressions.append(
+                        exp.DataTypeParam(
+                            this=exp.Literal(
+                                this=column.data_type.scale, is_string=False
+                            )
+                        )
+                    )
+                kind = exp.DataType(
+                    this=data_type, nested=False, expressions=expressions
+                )
 
         col_def = exp.ColumnDef(
             this=exp.Identifier(this=column.name, quoted=True), kind=kind

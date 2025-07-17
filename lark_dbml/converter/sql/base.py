@@ -14,4 +14,4 @@ class BaseSQLConverter(Generic[DBMLNode], ABC):
 
     @abstractmethod
     def convert(self, node: DBMLNode) -> exp.Expression:
-        raise NotImplementedError("conver function is not implemented")
+        raise NotImplementedError
