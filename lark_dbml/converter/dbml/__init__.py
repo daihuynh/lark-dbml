@@ -13,6 +13,8 @@ from .column import ColumnConverter
 from .index import IndexConverter
 from .table import TableConverter
 
+__all__ = ["to_dbml", "DBMLConverterSettings"]
+
 
 def to_dbml(diagram: Diagram, settings: DBMLConverterSettings = None) -> str:
     endblock = os.linesep * 2
