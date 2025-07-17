@@ -8,7 +8,7 @@ Table TableA [note: 'This is table A'] {
   DateTimeValue  datetime
 }
 
-TablePartial TableB {
+TablePartial TableB [headercolor: #3498DB] {
   Id             varchar(10)   [primary key, not null]
 }
 
@@ -20,6 +20,7 @@ Table "schema1"."Table D" as D {
   ~TableB
   Name           "super string"  [unique, note: 'Name']
   ~TableC
+  When          datetime   [default: '`now()`']
 
   Note: 'Includes TableB & TableC'
 }

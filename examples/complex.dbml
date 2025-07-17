@@ -1,12 +1,16 @@
 Project example {
+  Version: '1.0.0'
   database_type: 'postgres'
-  note: 'Example project for lark-dbml parser'
+  Note: 'Example project for lark-dbml parser'
 }
 
 Enum "example"."answer" {
-  "n/a"
-  "yes"
-  "no"
+  "n/a" [note: 'Not applicable']
+  "yes" [note: '''
+          as known as
+          True
+        ''']
+  "no"  [note: '\'False\'']
 }
 
 TablePartial BaseTable {
@@ -15,7 +19,8 @@ TablePartial BaseTable {
 
 Table "another"."user" {
   ~BaseTable
-  name text [unique]
+  name varchar(255) [unique]
+  value decimal(12,4)
 
   indexes {
     name [name: 'idx_user_name', unique]
@@ -25,7 +30,7 @@ Table "another"."user" {
 Table "example"."option" {
   ~BaseTable
   seq int
-  content text
+  content varchar(255)
 
   indexes {
     seq            [name: 'idx_option_seq']
@@ -35,7 +40,7 @@ Table "example"."option" {
 
 Table "example"."question" {
   ~BaseTable
-  content text
+  content varchar(255)
   option_id int
 
   indexes {
@@ -45,7 +50,7 @@ Table "example"."question" {
 
 Table "example"."questionare" {
   ~BaseTable
-  name text
+  name varchar(255)
   question_id int
 
   indexes {
