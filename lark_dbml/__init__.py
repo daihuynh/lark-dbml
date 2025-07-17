@@ -4,6 +4,7 @@ from pathlib import Path
 
 from lark import Lark
 
+from .converter.dbml import to_dbml, DBMLConverterSettings
 from .schema import (
     Diagram,
 )
@@ -33,3 +34,20 @@ def loads(dbml_diagram: str) -> Diagram:
     transformer = DBMLTransformer()
 
     return transformer.transform(tree)
+
+
+def dump(
+    diagram: Diagram,
+    file: str | Path | TextIOWrapper,
+    settings: DBMLConverterSettings = None,
+):
+    dbml = dumps(diagram, settings)
+    if isinstance(file, TextIOWrapper):
+        file.write(dbml)
+    else:
+        with open(file, encoding="utf-8", mode="w") as f:
+            f.write(dbml)
+
+
+def dumps(diagram: Diagram, settings: DBMLConverterSettings = None) -> str:
+    return to_dbml(diagram, settings)
