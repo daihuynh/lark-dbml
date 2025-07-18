@@ -10,6 +10,7 @@ from .schema import (
 )
 from .transformer import DBMLTransformer
 
+__all__ = ["load", "loads", "dump", "dumps", "Diagram", "DBMLConverterSettings"]
 
 GRAMMAR_FILE_CONTENT = (
     pkg_resources.files("lark_dbml").joinpath("dbml.lark").read_text(encoding="utf-8")

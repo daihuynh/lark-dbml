@@ -1,6 +1,5 @@
 from textwrap import dedent
-from lark_dbml import Diagram
-from lark_dbml.converter.dbml.base import DBMLConverterSettings
+from lark_dbml import Diagram, DBMLConverterSettings
 from lark_dbml.schema import (
     Column,
     ColumnSettings,
