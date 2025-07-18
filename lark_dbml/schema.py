@@ -1,15 +1,13 @@
-from typing import Any, Annotated, Literal, List
+from typing import Any, Annotated, Dict, Literal, List
 from pydantic import BaseModel, ConfigDict, Field, BeforeValidator
 from pydantic.aliases import AliasChoices
 
 
 class Settings(BaseModel):
     model_config = ConfigDict(extra="allow")
-    note: str | None = None
 
 
 class Noteable(BaseModel):
-    model_config = ConfigDict(extra="allow")
     note: str | None = Field(
         default=None, validation_alias=AliasChoices("note", "Note")
     )
@@ -22,6 +20,7 @@ class Name(BaseModel):
 
 # Project
 class Project(Name, Noteable):
+    model_config = ConfigDict(extra="allow")
     database_type: str | None = None
 
 
@@ -32,9 +31,13 @@ class TableGroup(Name, Noteable):
 
 
 # Enum
+class EnumValueSettings(Settings, Noteable):
+    pass
+
+
 class EnumValue(BaseModel):
     value: str
-    settings: Settings | None = None
+    settings: EnumValueSettings | None = None
 
 
 class Enum(Name):
@@ -42,7 +45,7 @@ class Enum(Name):
 
 
 # Sticky Note
-class Note(Noteable):
+class Note(Name, Noteable):
     pass
 
 
@@ -80,7 +83,7 @@ class DataType(BaseModel):
     scale: int | None = None
 
 
-class ColumnSettings(Settings):
+class ColumnSettings(Settings, Noteable):
     is_primary_key: bool = False
     is_null: bool = True
     is_unique: bool = False
@@ -94,7 +97,7 @@ class Column(Name):
     settings: ColumnSettings | None = None
 
 
-class IndexSettings(Settings):
+class IndexSettings(Settings, Noteable):
     idx_type: Literal["btree", "hash"] | None = Field(default=None, alias="type")
     name: str | None = None
     is_unique: bool = False
@@ -108,7 +111,7 @@ class Index(BaseModel):
     settings: IndexSettings | None = None
 
 
-class TableSettings(Settings):
+class TableSettings(Settings, Noteable):
     header_color: str | None = Field(
         default=None, validation_alias=AliasChoices("headercolor", "headerColor")
     )
@@ -123,6 +126,7 @@ class TablePartial(Name):
 class Table(TablePartial, Noteable):
     alias: str | None = None
     table_partials: List[str] | None = None
+    table_partial_orders: Dict[str, int] | None = None
 
 
 # Diagram

@@ -6,7 +6,8 @@ CREATE TYPE example.answer AS ENUM ('n/a','yes','no');
 
 CREATE TABLE "another"."user" (
   "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  "name" TEXT UNIQUE
+  "name" VARCHAR(255) UNIQUE,
+  "value" DECIMAL(12, 4)
 );
 
 CREATE UNIQUE INDEX "idx_user_name" ON "another"."user"("name");
@@ -14,7 +15,7 @@ CREATE UNIQUE INDEX "idx_user_name" ON "another"."user"("name");
 CREATE TABLE "example"."option" (
   "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   "seq" INT,
-  "content" TEXT
+  "content" VARCHAR(255)
 );
 
 CREATE INDEX "idx_option_seq" ON "example"."option"("seq");
@@ -23,7 +24,7 @@ CREATE UNIQUE INDEX "idx_option_seq_content" ON "example"."option"("seq", "conte
 
 CREATE TABLE "example"."question" (
   "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  "content" TEXT,
+  "content" VARCHAR(255),
   "option_id" INT,
   CONSTRAINT fk_question_option FOREIGN KEY ("option_id") REFERENCES "example"."option" (
     "id"
@@ -34,7 +35,7 @@ CREATE INDEX "idx_question_content" ON "example"."question"("content");
 
 CREATE TABLE "example"."questionare" (
   "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  "name" TEXT,
+  "name" VARCHAR(255),
   "question_id" INT,
   CONSTRAINT fk_questionare_question FOREIGN KEY ("question_id") REFERENCES "example"."question" (
     "id"

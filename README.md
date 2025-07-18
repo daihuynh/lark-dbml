@@ -8,12 +8,16 @@
 # Lark-DBML
 
 * [Features](#features)
+* [Milestones](#milestones)
 * [Installation](#installation)
 * [Usage](#usage)
   * [Output Structure](#output-structure)
   * [Parser](#parser)
+    * [Load](#load-dbml)
+    * [Dump](#dump-dbml)
   * [Converters](#converters)
     * [SQL](#sql)
+    * [Data Contract](#data-contract)
 * [Development](#development)
 * [License](#license)
 
@@ -28,6 +32,19 @@ A Python parser for [Database Markup Language (DBML)](https://dbml.dbdiagram.io)
 * **Pydantic Validation:** Ensures the parsed DBML data conforms to a well-defined structure using Pydantic 2.11, providing reliable data integrity.
 * **Structured Output:** Generates Python objects representing your DBML diagram, making it easy to programmatically access and manipulate your database schema.
 * **Future-Proof:** the parser accepts any properties or settings that are not defined in the DBML spec.
+* **Support multiple converters**:
+  * **SQL**: convert Pydantic output model to SQL with SQLGlot.
+  * **DBML**: convert Pydantic model to DBML.
+
+## Milestones
+
+- [x] DBML Parser - Earley
+- [x] SQL Converter
+- [x] DBML Converter
+- [ ] Data Contract Converter
+- [ ] Generate DBML from a database connection string
+- [ ] Optimised DBML Parser - LALR(1)
+- [ ] CLI
 
 ## Installation
 
@@ -60,6 +77,10 @@ class Diagram(BaseModel):
 ```
 
 ### Parser
+
+lark-dbml uses the same API as other parser packages in Python.
+
+#### Load DBML
 
 ```python
 from lark_dbml import load, loads
@@ -103,9 +124,70 @@ Table myTable [newkey: 'random_value'] {
 }
 """)
 ```
+
 ```
 >>> diagram.tables[0].settings
 TableSettings(note=None, header_color=None, newkey='random_value')
+```
+
+#### Dump DBML
+
+
+```python
+from lark_dbml import dump, dumps
+
+from lark_dbml.converter.dbml import DBMLConverterSettings
+from lark_dbml.schema import (
+    Column,
+    ColumnSettings,
+    DataType,
+    Diagram,
+    Table,
+    TableSettings
+)
+
+diagram = Diagram(
+    tables=[
+        Table(
+            name="body",
+            alias="full_table",
+            note="Incorporated with header and footer",
+            settings=TableSettings(
+                headercolor="#3498DB",
+                note="header note",
+                partitioned_by="id"
+            ),
+            columns=[
+                Column(
+                    name="id",
+                    data_type=DataType(sql_type="int"),
+                    settings=ColumnSettings(
+                        is_primary_key=True, note="why is id behind name?"
+                    ),
+                ),
+                Column(
+                    name="audit_date",
+                    data_type=DataType(sql_type="timestamp"),
+                    settings=ColumnSettings(default="`getdate()`"),
+                ),
+            ],
+        )
+    ]
+)
+
+# This converts the diagram to DBML,
+# but partitioned_by will not be included
+dumps(diagram)
+
+# This includes partitioned_by in the output
+dumps(diagram,
+      settings=DBMLConverterSettings(
+          allow_extra=True
+      )
+)
+
+# Write the DBML to file
+dump(diagram, 'diagram.dbml')
 ```
 
 ### Converters
@@ -127,6 +209,10 @@ diagram = load("diagram.dbml")
 # Convert to SQL for PostgreSQL
 sql = to_sql(diagram, Dialects.POSTGRES)
 ```
+
+#### Data Contract
+
+**TBA**
 
 ## Development
 

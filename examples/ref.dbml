@@ -3,3 +3,5 @@ Ref name_optional {
 }
 
 Ref: schema1.table1.column1 < schema2.table2.column2
+
+Ref: schema1.table1.column1 < schema2.table2.column2 [color: #0f0]

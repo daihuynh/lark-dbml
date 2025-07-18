@@ -147,15 +147,6 @@ class DBMLTransformer(Transformer[Token, Diagram]):
             "ref": {"relationship": vars[0], "to_table": vars[1], "to_columns": vars[2]}
         }
 
-    def ref_settings(self, vars):
-        settings = {}
-        for var in vars:
-            if isinstance(var, tuple):
-                settings[var[0]] = var[1]
-            else:
-                settings.update(var)
-        return settings
-
     @log_transform
     def reference(self, vars) -> Reference:
         name_dict = {}
@@ -264,15 +255,22 @@ class DBMLTransformer(Transformer[Token, Diagram]):
     @log_transform
     def table(self, name, *vars) -> Table:
         data = name | {"columns": []}
+        order = 0
+        table_partial_orders = {}
         for var in vars:
             if "column" in var:
+                order += 1
                 data["columns"].append(var["column"])
             elif isinstance(var, str):
+                order += 1
                 table_partials = data.get("table_partials", [])
                 table_partials.append(var)
+                table_partial_orders[var] = order
                 data["table_partials"] = table_partials
             else:
                 data.update(var)
+        if table_partial_orders:
+            data.update({"table_partial_orders": table_partial_orders})
         return Table.model_validate(data)
 
     # ====== DIAGRAM ======
