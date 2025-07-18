@@ -1,6 +1,6 @@
 [project]
 name = "lark-dbml"
-version = "0.3.0"
+version = "0.4.0"
 description = "DBML parser using Lark."
 license = "MIT"
 authors = [
@@ -9,7 +9,7 @@ authors = [
 readme = "README.md"
 requires-python = ">=3.10"
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
     "Intended Audience :: Developers",
