@@ -1,4 +1,5 @@
 Project my_project {
+    version: '1.0.0'
     database_type: 'Generic'
     Note: '''
         Version: 1.0.0

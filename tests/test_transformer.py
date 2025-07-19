@@ -8,6 +8,7 @@ def test_project(example_path):
     assert diagram.project
 
     project = diagram.project
+    assert project.version == "1.0.0"
     assert project.name == "my_project"
     assert project.database_type == "Generic"
     assert project.note == ("Version: 1.0.0\n        Release: 01/01/2025")
@@ -120,23 +121,27 @@ def test_table_partial(example_path):
     table = diagram.table_partials[0]
     assert table.name == "base_template"
     assert table.settings.header_color == "#ff0000"
-    assert len(table.columns) == 3
+    assert len(table.columns) == 4
     assert table.columns[0].name == "id"
     assert table.columns[0].data_type.sql_type == "int"
     assert table.columns[0].settings.is_primary_key
     assert not table.columns[0].settings.is_null
-    assert table.columns[1].name == "created_at"
-    assert table.columns[1].data_type.sql_type == "timestamp"
-    assert table.columns[1].settings.default == "`now()`"
-    assert table.columns[2].name == "updated_at"
+    assert table.columns[1].name == "is_active"
+    assert table.columns[1].data_type.sql_type == "boolean"
+    assert table.columns[1].settings.default
+    assert table.columns[2].name == "created_at"
     assert table.columns[2].data_type.sql_type == "timestamp"
     assert table.columns[2].settings.default == "`now()`"
+    assert table.columns[3].name == "updated_at"
+    assert table.columns[3].data_type.sql_type == "timestamp"
+    assert table.columns[3].settings.default == "`now()`"
 
     table = diagram.table_partials[1]
     assert table.name == "soft_delete_template"
     assert len(table.columns) == 2
     assert table.columns[0].name == "delete_status"
     assert table.columns[0].data_type.sql_type == "boolean"
+    assert not table.columns[0].settings.default
     assert not table.columns[0].settings.is_null
     assert table.columns[1].name == "deleted_at"
     assert table.columns[1].data_type.sql_type == "timestamp"
@@ -144,7 +149,7 @@ def test_table_partial(example_path):
 
     table = diagram.table_partials[2]
     assert table.name == "email_index"
-    assert len(table.columns) == 2
+    assert len(table.columns) == 3
     assert table.columns[0].name == "email"
     assert table.columns[0].data_type.sql_type == "varchar"
     assert table.columns[0].data_type.length == 255
@@ -153,6 +158,10 @@ def test_table_partial(example_path):
     assert table.columns[1].data_type.sql_type == "decimal"
     assert table.columns[1].data_type.length == 10
     assert table.columns[1].data_type.scale == 5
+    assert table.columns[1].settings.default == 10.2
+    assert table.columns[2].name == "int_value"
+    assert table.columns[2].data_type.sql_type == "integer"
+    assert table.columns[2].settings.default == 100
     assert len(table.indexes) == 2
     assert table.indexes[0].columns == ["email"]
     assert table.indexes[0].settings.name == "email_idx"
