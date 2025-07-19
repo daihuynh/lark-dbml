@@ -20,12 +20,12 @@ name: (IDENTIFIER | STRING)
 
 ?key: (IDENTIFIER | STRING)
 
-?value: IDENTIFIER
+?value: "true"                -> true
+      | "false"               -> false
+      | IDENTIFIER
       | STRING
       | MULTILINE_STRING
       | NUMBER
-      | "true"
-      | "false"
       | FUNC_EXP
       | COLOR_HEX
       | REFERENTIAL_ACTION
