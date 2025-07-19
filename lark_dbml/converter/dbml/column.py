@@ -4,7 +4,23 @@ from .utils import name_to_str, quote_identifier, quote_value
 
 
 class ColumnConverter(BaseDBMLConverter[Column]):
+    """
+    DBML converter for Column objects.
+
+    Converts DBML Column objects to DBML string definitions, including data type,
+    settings, flags, and inline references.
+    """
+
     def convert(self, node):
+        """
+        Convert a DBML Column object to a DBML string definition.
+
+        Args:
+            node: The Column object to convert.
+
+        Returns:
+            str: The DBML string representation of the column.
+        """
         column = node
         column_def = self.settings.indent
         column_def += quote_identifier(column.name)
@@ -21,6 +37,15 @@ class ColumnConverter(BaseDBMLConverter[Column]):
         return column_def
 
     def _convert_index_settings(self, settings: ColumnSettings):
+        """
+        Convert column settings to a DBML settings string.
+
+        Args:
+            settings: The ColumnSettings object containing settings and flags.
+
+        Returns:
+            str: The DBML string representation of the settings.
+        """
         kv = {}
         for field in ColumnSettings.model_fields:
             if (
@@ -65,6 +90,15 @@ class ColumnConverter(BaseDBMLConverter[Column]):
         return ", ".join(ref_def + flags + kv)
 
     def _convert_inline_reference(self, reference: ReferenceInline):
+        """
+        Convert an inline reference to a DBML reference string.
+
+        Args:
+            reference: The ReferenceInline object to convert.
+
+        Returns:
+            str: The DBML string representation of the inline reference.
+        """
         return (
             f"ref: {reference.relationship} "
             f"{name_to_str(reference.to_table)}"

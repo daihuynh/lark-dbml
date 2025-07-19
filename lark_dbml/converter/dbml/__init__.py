@@ -1,7 +1,6 @@
 from io import StringIO
 import os
 
-
 from ...schema import Diagram
 from .base import DBMLConverterSettings
 from .enum import EnumConverter
@@ -17,6 +16,20 @@ __all__ = ["to_dbml", "DBMLConverterSettings"]
 
 
 def to_dbml(diagram: Diagram, settings: DBMLConverterSettings = None) -> str:
+    """
+    Convert a DBML Diagram object to a DBML string.
+
+    This function uses converter classes for each DBML schema type to generate
+    the DBML string representation of the diagram, including project, enums,
+    table partials, tables, references, table groups, and sticky notes.
+
+    Args:
+        diagram: The DBML Diagram object to convert.
+        settings: Optional DBMLConverterSettings for formatting.
+
+    Returns:
+        str: The DBML string representation of the diagram.
+    """
     endblock = os.linesep * 2
     project_converter = ProjectConverter(settings)
     enum_converter = EnumConverter(settings)

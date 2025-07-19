@@ -5,7 +5,23 @@ from .base import BaseSQLConverter
 
 
 class ReferenceConverter(BaseSQLConverter[Reference]):
+    """
+    SQL converter for DBML Reference objects.
+
+    Converts DBML reference definitions to SQLGlot foreign key constraint expressions,
+    including support for ON DELETE and ON UPDATE actions.
+    """
+
     def convert(self, node):
+        """
+        Convert a DBML Reference object to a SQLGlot foreign key constraint expression.
+
+        Args:
+            node: The Reference object to convert.
+
+        Returns:
+            exp.Constraint: The SQLGlot foreign key constraint expression.
+        """
         reference = node
         options = []
         if reference.settings:

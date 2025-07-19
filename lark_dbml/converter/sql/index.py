@@ -5,12 +5,32 @@ from .base import BaseSQLConverter
 
 
 class IndexConverter(BaseSQLConverter[Index]):
+    """
+    SQL converter for DBML Index objects.
+
+    Converts DBML index definitions to SQLGlot index expressions,
+    including support for dialect-specific features like NULLS FIRST.
+    """
+
     def __init__(self, dialect, table: Table):
+        """
+        Initialize the index converter.
+
+        Args:
+            dialect: The SQL dialect to use for conversion.
+            table: The Table object associated with the index.
+        """
         super().__init__(dialect)
         self.table = table
 
     @property
     def support_nulls_first(self) -> bool:
+        """
+        Indicates if the dialect supports NULLS FIRST in index ordering.
+
+        Returns:
+            bool: True if NULLS FIRST is supported, False otherwise.
+        """
         return self.dialect in [
             Dialects.POSTGRES,
             Dialects.ORACLE,
@@ -18,6 +38,15 @@ class IndexConverter(BaseSQLConverter[Index]):
         ]
 
     def convert(self, node):
+        """
+        Convert a DBML Index object to a SQLGlot index creation expression.
+
+        Args:
+            node: The Index object to convert.
+
+        Returns:
+            exp.Create: The SQLGlot index creation expression.
+        """
         index = node
         columns = []
         for column in index.columns:
@@ -57,7 +86,23 @@ class IndexConverter(BaseSQLConverter[Index]):
 
 
 class CompositePKIndexConverter(BaseSQLConverter[Index]):
+    """
+    SQL converter for composite primary key indexes.
+
+    Converts DBML composite primary key definitions to SQLGlot PRIMARY KEY expressions.
+    """
+
     def convert(self, node):
+        """
+        Convert a DBML Index object representing a composite primary key
+        to a SQLGlot PRIMARY KEY expression.
+
+        Args:
+            node: The Index object to convert.
+
+        Returns:
+            exp.PrimaryKey: The SQLGlot PRIMARY KEY expression.
+        """
         index = node
         return exp.PrimaryKey(
             expressions=list(
