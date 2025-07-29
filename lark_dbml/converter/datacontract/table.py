@@ -9,14 +9,23 @@ from .reference import ReferenceConverter
 
 class TableConverter(BaseDataContractConverter[TableType]):
     """
-    SQL converter for DBML Enum objects.
+    Data contract converter for Table and TablePartial objects.
 
-    Converts DBML enum definitions to SQLGlot expressions for supported SQL dialects.
+    Converts DBML Table and TablePartial objects to data contract dictionary definitions,
+    including columns, indexes, references, table partials, and notes.
     """
 
     def __init__(
         self, settings, table_partials: List[TablePartial], references: List[Reference]
     ):
+        """
+        Initialize the table converter.
+
+        Args:
+            settings: DataContractConverterSettings object.
+            table_partials: List of TablePartial objects for column inheritance.
+            references: List of Reference objects for foreign key constraints.
+        """
         super().__init__(settings)
         self.table_partials = table_partials
         self.references = references
@@ -25,13 +34,13 @@ class TableConverter(BaseDataContractConverter[TableType]):
 
     def convert(self, node):
         """
-        Convert a DBML Enum object to a SQLGlot command for enum type creation.
+        Convert a DBML Table or TablePartial object to a data contract dictionary definition.
 
         Args:
-            node: The Enum object to convert.
+            node: The Table or TablePartial object to convert.
 
         Returns:
-            exp.Command: The SQLGlot command expression for creating the enum type.
+            dict: The data contract dictionary representation of the table or table partial.
         """
         table = node
         kv = {

@@ -4,21 +4,20 @@ from .base import BaseDataContractConverter
 
 class EnumConverter(BaseDataContractConverter[Enum]):
     """
-    DBML converter for Enum objects.
+    Data contract converter for Enum objects.
 
-    Converts DBML Enum objects to DBML string definitions, including enum values
-    and their associated settings.
+    Converts DBML Enum objects to data contract dictionary definitions, including enum values.
     """
 
     def convert(self, node):
         """
-        Convert a DBML Enum object to a DBML string definition.
+        Convert a DBML Enum object to a data contract dictionary definition.
 
         Args:
             node: The Enum object to convert.
 
         Returns:
-            str: The DBML string representation of the enum.
+            dict: The data contract dictionary representation of the enum.
         """
         enum = node
         kv = {

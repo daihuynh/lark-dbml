@@ -4,21 +4,21 @@ from .base import BaseDataContractConverter
 
 class ColumnConverter(BaseDataContractConverter[Column]):
     """
-    DBML converter for Column objects.
+    Data contract converter for Column objects.
 
-    Converts DBML Column objects to DBML string definitions, including data type,
+    Converts DBML Column objects to data contract dictionary definitions, including data type,
     settings, flags, and inline references.
     """
 
     def convert(self, node):
         """
-        Convert a DBML Column object to a DBML string definition.
+        Convert a DBML Column object to a data contract dictionary definition.
 
         Args:
             node: The Column object to convert.
 
         Returns:
-            str: The DBML string representation of the column.
+            dict: The data contract dictionary representation of the column.
         """
         column = node
         is_data_type = isinstance(column.data_type, DataType)

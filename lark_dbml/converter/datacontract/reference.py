@@ -4,21 +4,21 @@ from .base import BaseDataContractConverter
 
 class ReferenceConverter(BaseDataContractConverter[Reference]):
     """
-    DBML converter for Reference objects.
+    Data contract converter for Reference objects.
 
-    Converts DBML Reference objects to DBML string definitions, including columns,
-    relationships, and settings.
+    Converts DBML Reference objects to data contract dictionary definitions,
+    including referenced columns and relationships.
     """
 
     def convert(self, node):
         """
-        Convert a DBML Reference object to a DBML string definition.
+        Convert a DBML Reference object to a data contract dictionary definition.
 
         Args:
             node: The Reference object to convert.
 
         Returns:
-            str: The DBML string representation of the reference.
+            dict: The data contract dictionary representation of the reference.
         """
         reference = node
         kv = {"fields": {}}

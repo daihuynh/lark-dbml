@@ -9,7 +9,6 @@ from .project import ProjectConverter
 from .table import TableConverter
 
 
-# Define a custom representer function for OrderedDict
 def represent_ordereddict(dumper, data):
     pairs = ((k, v) for (k, v) in data.items() if v)
     return dumper.represent_mapping("tag:yaml.org,2002:map", pairs)
@@ -21,7 +20,7 @@ def represent_multiline_string(dumper, data):
     return dumper.represent_scalar("tag:yaml.org,2002:str", data)
 
 
-# Register the representer with the Dumper
+# Register the representers with the YAML dumper
 yaml.add_representer(defaultdict, represent_ordereddict)
 yaml.add_representer(OrderedDict, represent_ordereddict)
 yaml.add_representer(str, represent_multiline_string)
@@ -30,6 +29,20 @@ yaml.add_representer(str, represent_multiline_string)
 def to_data_contract(
     diagram: Diagram, settings: DataContractConverterSettings = None
 ) -> str:
+    """
+    Convert a DBML Diagram object to a data contract YAML string.
+
+    This function uses converter classes for each DBML schema type to generate
+    the data contract YAML representation of the diagram, including enums, tables,
+    models, definitions, and sticky notes.
+
+    Args:
+        diagram: The DBML Diagram object to convert.
+        settings: Optional DataContractConverterSettings for formatting and options.
+
+    Returns:
+        str: The data contract YAML string representation of the diagram.
+    """
     if not settings:
         settings = DataContractConverterSettings()
     project_convert = ProjectConverter(settings)

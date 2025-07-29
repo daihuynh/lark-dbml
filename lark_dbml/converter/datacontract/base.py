@@ -28,10 +28,6 @@ DBMLNode = TypeVar(
 class DataContractConverterSettings:
     """
     Settings for Data Contract converters.
-
-    Attributes:
-        indent (str): String used for indentation (default: 4 spaces).
-        allow_extra (bool): Whether to allow extra fields in output (default: False).
     """
 
     def __init__(
@@ -42,11 +38,13 @@ class DataContractConverterSettings:
         deserialization_func: DeserializationFunc = None,  # must set when note_as_fields is True
     ):
         """
-        Initialize DBMLConverterSettings.
+        Initialize DataContractConverterSettings.
 
         Args:
-            indent: String used for indentation.
-            allow_extra: Whether to allow extra fields in output.
+            project_as_info: Whether to treat the project as the info section.
+            note_as_description: Whether to use notes as descriptions.
+            note_as_fields: Whether to parse notes as fields.
+            deserialization_func: Function to deserialize note fields if note_as_fields is True.
         """
         self.project_as_info = project_as_info
         self.note_as_description = note_as_description
@@ -56,18 +54,18 @@ class DataContractConverterSettings:
 
 class BaseDataContractConverter(Generic[DBMLNode], ABC):
     """
-    Abstract base class for Contract converters.
+    Abstract base class for Data Contract converters.
 
     Subclasses should implement the convert method to transform a Contract schema node
-    into a Contract string representation using the provided settings.
+    into a Contract dictionary representation using the provided settings.
     """
 
     def __init__(self, settings: DataContractConverterSettings):
         """
-        Initialize the converter with DBML converter settings.
+        Initialize the converter with DataContractConverterSettings.
 
         Args:
-            settings: DBMLConverterSettings object.
+            settings: DataContractConverterSettings object.
         """
         if not settings:
             settings = DataContractConverterSettings()
@@ -76,12 +74,12 @@ class BaseDataContractConverter(Generic[DBMLNode], ABC):
     @abstractmethod
     def convert(self, node: DBMLNode) -> dict[str, Any]:
         """
-        Convert a Contract schema node to a Contract string representation.
+        Convert a Contract schema node to a Contract dictionary representation.
 
         Args:
             node: The Contract schema node to convert.
 
         Returns:
-            str: The Contract string representation of the node.
+            dict[str, Any]: The Contract dictionary representation of the node.
         """
         raise NotImplementedError("convert function is not implemented")
