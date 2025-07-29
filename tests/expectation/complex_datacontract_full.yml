@@ -1,0 +1,146 @@
+dataContractSpecification: 1.2.0
+id: example
+info:
+  description: Example project for lark-dbml parser
+  contact:
+    name: Austin Huynh
+    url: contact@austinhuynh.me
+  database_type: postgres
+  title: Example lark-dbml to Data Contract
+  version: 1.0.0
+  status: in development
+  owner: lark-dbml
+servers:
+  production:
+    delimiter: new_line
+    description: One folder per model. One file per day.
+    environment: prod
+    format: json
+    location: s3://datacontract-example-orders-latest/v2/{model}/*.json
+    roles:
+    - description: Access to the data for US region
+      name: analyst_us
+    - description: Access to the data for China region
+      name: analyst_cn
+    type: s3
+terms:
+  billing: 5000 USD per month
+  limitations: |-
+    Not suitable for real-time use cases.
+    Data may not be used to identify individual customers.
+    Max data processing per day: 10 TiB
+  noticePeriod: P3M
+  policies:
+  - name: privacy-policy
+    url: https://example.com/privacy-policy
+  - description: External data is licensed under agreement 1234.
+    name: license
+    url: https://example.com/license/1234
+  usage: |-
+    Data can be used for reports, analytics and machine learning use cases.
+    Order may be linked and joined by other tables
+models:
+  option:
+    fields:
+      id:
+        $ref: '#/definitions/id'
+        primaryKey: true
+      seq:
+        $ref: '#/definitions/seq'
+      content:
+        $ref: '#/definitions/content'
+    type: table
+  question:
+    fields:
+      id:
+        $ref: '#/definitions/id'
+        primaryKey: true
+      content:
+        $ref: '#/definitions/content'
+      option_id:
+        $ref: '#/definitions/option_id'
+        references: option.id
+    type: table
+  questionare:
+    fields:
+      id:
+        $ref: '#/definitions/id'
+        primaryKey: true
+      name:
+        $ref: '#/definitions/name'
+      question_id:
+        $ref: '#/definitions/question_id'
+        references: question.id
+    type: table
+  user:
+    additionalFields: true
+    config:
+      key1: value1
+    description: this is user table from another schema
+    fields:
+      id:
+        $ref: '#/definitions/id'
+        primaryKey: true
+      name:
+        $ref: '#/definitions/name'
+        unique: true
+      value:
+        $ref: '#/definitions/value'
+    title: Another User
+    type: table
+  user_survey:
+    fields:
+      id:
+        $ref: '#/definitions/id'
+      user_id:
+        $ref: '#/definitions/user_id'
+        references: user.id
+      questionare_id:
+        $ref: '#/definitions/questionare_id'
+        references: questionare.id
+      submission_date:
+        $ref: '#/definitions/submission_date'
+        examples:
+        - '`now()`'
+      answer_given:
+        $ref: '#/definitions/answer_given'
+    primaryKey:
+    - user_id
+    - questionare_id
+    type: table
+definitions:
+  answer:
+    enum:
+    - n/a
+    - 'yes'
+    - 'no'
+    type: string
+  answer_given:
+    type: string
+  content:
+    maxLength: 255
+    type: varchar
+  id:
+    type: int
+  name:
+    maxLength: 255
+    type: varchar
+  option_id:
+    type: int
+  question_id:
+    type: int
+  questionare_id:
+    type: int
+  seq:
+    type: int
+  submission_date:
+    type: timestamp
+  user_id:
+    type: int
+  value:
+    description: a decimal value
+    maximum: 9.0
+    minimum: 1.0
+    precision: 12
+    scale: 4
+    type: decimal

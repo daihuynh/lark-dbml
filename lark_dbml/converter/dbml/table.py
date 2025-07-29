@@ -9,17 +9,41 @@ from .index import IndexConverter
 
 
 class TableConverter(BaseDBMLConverter[TableType]):
+    """
+    DBML converter for Table and TablePartial objects.
+
+    Converts DBML Table and TablePartial objects to DBML string definitions,
+    including columns, indexes, settings, aliases, table partials, and notes.
+    """
+
     def __init__(
         self,
         settings,
         column_converter: ColumnConverter,
         index_converter: IndexConverter,
     ):
+        """
+        Initialize the table converter.
+
+        Args:
+            settings: DBMLConverterSettings object.
+            column_converter: Converter for columns.
+            index_converter: Converter for indexes.
+        """
         super().__init__(settings)
         self.column_converter = column_converter
         self.index_converter = index_converter
 
     def convert(self, node):
+        """
+        Convert a DBML Table or TablePartial object to a DBML string definition.
+
+        Args:
+            node: The Table or TablePartial object to convert.
+
+        Returns:
+            str: The DBML string representation of the Table or TablePartial.
+        """
         table = node
         is_table = isinstance(table, Table)
         table_type = "Table" if is_table else "TablePartial"

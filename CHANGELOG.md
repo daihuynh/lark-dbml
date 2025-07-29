@@ -1,4 +1,22 @@
 <!-- insertion marker -->
+## [v0.5.0](https://github.com/daihuynh/lark-dbml/releases/tag/v0.5.0) - 2025-07-29
+
+<small>[Compare with v0.4.0](https://github.com/daihuynh/lark-dbml/compare/v0.4.0...v0.5.0)</small>
+
+### Features
+
+- Data Contract conversion.
+- EBNF Grammar update. DBML keywords are now case insensitive. Right recursions are changed to left recursions as recommended by Lark ([1640651](https://github.com/daihuynh/lark-dbml/commit/164065113175b809b22a09ad1aa9ba52fc12ea0f) by Austin Huynh).
+
+### Bug Fixes
+
+- true and false literals are assigned to true and false aliases. The orders of true and false literals are rearranged ([a4cf5ac](https://github.com/daihuynh/lark-dbml/commit/a4cf5ac26787e8ef608130b5522ff99e65069af8) by Austin Huynh).
+
+### Code Refactoring
+
+- remove lark-dbml version ([56cd1ae](https://github.com/daihuynh/lark-dbml/commit/56cd1aeaec13a0a08c74fea3c8cfe74e189b5e78) by Austin Huynh).
+- dynamic package version ([92390a7](https://github.com/daihuynh/lark-dbml/commit/92390a71daa9b1899d23f4eebcb54819499a70bf) by Austin Huynh).
+
 ## [v0.4.0](https://github.com/daihuynh/lark-dbml/releases/tag/v0.4.0) - 2025-07-18
 
 <small>[Compare with v0.3.0](https://github.com/daihuynh/lark-dbml/compare/v0.3.0...v0.4.0)</small>

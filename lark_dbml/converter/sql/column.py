@@ -5,15 +5,44 @@ from ...schema import Column, ColumnSettings, DataType, Enum
 
 
 class ColumnConverter(BaseSQLConverter[Column]):
+    """
+    SQL converter for DBML Column objects.
+
+    Converts DBML column definitions to SQLGlot column expressions,
+    including data types, constraints, defaults, and references.
+    """
+
     def __init__(self, dialect, enums: List[Enum]):
+        """
+        Initialize the column converter.
+
+        Args:
+            dialect: The SQL dialect to use for conversion.
+            enums: List of Enum objects for type resolution.
+        """
         super().__init__(dialect)
         self.enums = enums
 
     @property
     def support_inline_enum_def(self) -> bool:
+        """
+        Indicates if the dialect supports inline enum definitions.
+
+        Returns:
+            bool: True if inline enum definitions are supported, False otherwise.
+        """
         return self.dialect == Dialects.MYSQL
 
     def _convert_settings(self, settings: ColumnSettings) -> List[exp.Constraint]:
+        """
+        Convert DBML column settings to SQLGlot constraints.
+
+        Args:
+            settings: ColumnSettings object containing constraints and defaults.
+
+        Returns:
+            List[exp.Constraint]: List of SQLGlot constraint expressions.
+        """
         constraints = []
         if settings.is_increment:
             constraints.append(
@@ -79,6 +108,15 @@ class ColumnConverter(BaseSQLConverter[Column]):
         return constraints
 
     def convert(self, node):
+        """
+        Convert a DBML Column object to a SQLGlot column definition.
+
+        Args:
+            node: The Column object to convert.
+
+        Returns:
+            exp.ColumnDef: The SQLGlot column definition expression.
+        """
         column = node
 
         data_type: exp.DataType.Type = exp.DataType.Type.UNKNOWN

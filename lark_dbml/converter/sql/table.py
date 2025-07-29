@@ -8,6 +8,13 @@ from .reference import ReferenceConverter
 
 
 class TableConverter(BaseSQLConverter[Table]):
+    """
+    SQL converter for DBML Table objects.
+
+    Converts DBML table definitions to SQLGlot CREATE TABLE expressions,
+    including columns, indexes, references, and table partials.
+    """
+
     def __init__(
         self,
         dialect,
@@ -15,6 +22,15 @@ class TableConverter(BaseSQLConverter[Table]):
         references: List[Reference],
         enums: List[Enum],
     ):
+        """
+        Initialize the table converter.
+
+        Args:
+            dialect: The SQL dialect to use for conversion.
+            table_partials: List of TablePartial objects for column inheritance.
+            references: List of Reference objects for foreign key constraints.
+            enums: List of Enum objects for type resolution.
+        """
         super().__init__(dialect)
         self.column_converter = ColumnConverter(dialect, enums)
         self.index_converter = IndexConverter(dialect, self)
@@ -24,6 +40,15 @@ class TableConverter(BaseSQLConverter[Table]):
         self.references = references
 
     def convert(self, node):
+        """
+        Convert a DBML Table object to a SQLGlot CREATE TABLE expression.
+
+        Args:
+            node: The Table object to convert.
+
+        Returns:
+            exp.Create: The SQLGlot CREATE TABLE expression.
+        """
         table = node
         # column name : column object
         column_map: dict[str, Column] = {}

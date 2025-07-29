@@ -1,0 +1,102 @@
+dataContractSpecification: 1.2.0
+id: example
+info:
+  title: Untitled
+  version: 0.0.1
+models:
+  option:
+    fields:
+      id:
+        $ref: '#/definitions/id'
+        primaryKey: true
+      seq:
+        $ref: '#/definitions/seq'
+      content:
+        $ref: '#/definitions/content'
+    type: table
+  question:
+    fields:
+      id:
+        $ref: '#/definitions/id'
+        primaryKey: true
+      content:
+        $ref: '#/definitions/content'
+      option_id:
+        $ref: '#/definitions/option_id'
+        references: option.id
+    type: table
+  questionare:
+    fields:
+      id:
+        $ref: '#/definitions/id'
+        primaryKey: true
+      name:
+        $ref: '#/definitions/name'
+      question_id:
+        $ref: '#/definitions/question_id'
+        references: question.id
+    type: table
+  user:
+    fields:
+      id:
+        $ref: '#/definitions/id'
+        primaryKey: true
+      name:
+        $ref: '#/definitions/name'
+        unique: true
+      value:
+        $ref: '#/definitions/value'
+    type: table
+  user_survey:
+    fields:
+      id:
+        $ref: '#/definitions/id'
+      user_id:
+        $ref: '#/definitions/user_id'
+        references: user.id
+      questionare_id:
+        $ref: '#/definitions/questionare_id'
+        references: questionare.id
+      submission_date:
+        $ref: '#/definitions/submission_date'
+        examples:
+        - '`now()`'
+      answer_given:
+        $ref: '#/definitions/answer_given'
+    primaryKey:
+    - user_id
+    - questionare_id
+    type: table
+definitions:
+  answer:
+    enum:
+    - n/a
+    - 'yes'
+    - 'no'
+    type: string
+  answer_given:
+    type: string
+  content:
+    maxLength: 255
+    type: varchar
+  id:
+    type: int
+  name:
+    maxLength: 255
+    type: varchar
+  option_id:
+    type: int
+  question_id:
+    type: int
+  questionare_id:
+    type: int
+  seq:
+    type: int
+  submission_date:
+    type: timestamp
+  user_id:
+    type: int
+  value:
+    precision: 12
+    scale: 4
+    type: decimal

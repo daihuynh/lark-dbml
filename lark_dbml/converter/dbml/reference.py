@@ -4,7 +4,23 @@ from .utils import quote_identifier, quote_value, name_to_str
 
 
 class ReferenceConverter(BaseDBMLConverter[Reference]):
+    """
+    DBML converter for Reference objects.
+
+    Converts DBML Reference objects to DBML string definitions, including columns,
+    relationships, and settings.
+    """
+
     def convert(self, node):
+        """
+        Convert a DBML Reference object to a DBML string definition.
+
+        Args:
+            node: The Reference object to convert.
+
+        Returns:
+            str: The DBML string representation of the reference.
+        """
         reference = node
         if reference.name:
             reference_def = f"Ref {name_to_str(reference)}: "
@@ -39,6 +55,15 @@ class ReferenceConverter(BaseDBMLConverter[Reference]):
         return reference_def
 
     def _convert_settings(self, settings: ReferenceSettings) -> str:
+        """
+        Convert reference settings to a DBML settings string.
+
+        Args:
+            settings: The ReferenceSettings object containing settings and extra fields.
+
+        Returns:
+            str: The DBML string representation of the settings.
+        """
         kv = {}
         for field in ReferenceSettings.model_fields:
             if field not in Name.model_fields:

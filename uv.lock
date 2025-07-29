@@ -419,7 +419,6 @@ wheels = [
 
 [[package]]
 name = "lark-dbml"
-version = "0.2.0"
 source = { editable = "." }
 dependencies = [
     { name = "lark" },

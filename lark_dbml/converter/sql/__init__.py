@@ -8,7 +8,20 @@ from .index import IndexConverter
 from .table import TableConverter
 
 
-def to_sql(diagram: Diagram, dialect: Dialects = Dialects.POSTGRES):
+def to_sql(diagram: Diagram, dialect: Dialects = Dialects.POSTGRES) -> str:
+    """
+    Convert a DBML Diagram object to SQL statements for the specified dialect.
+
+    This function generates SQL for schemas, enums, tables, and indexes,
+    using SQLGlot converters and writes the output to a string buffer.
+
+    Args:
+        diagram: The DBML Diagram object to convert.
+        dialect: The SQL dialect to use (default: Dialects.POSTGRES).
+
+    Returns:
+        str: The generated SQL statements as a string.
+    """
     endblock = ";" + os.linesep + os.linesep
 
     enum_converter = EnumConverter(dialect)

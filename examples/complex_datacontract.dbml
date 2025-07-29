@@ -1,0 +1,158 @@
+Project example {
+  title: 'Example lark-dbml to Data Contract'
+  version: '1.0.0'
+  database_type: 'postgres'
+  status: 'in development'
+  owner: 'lark-dbml'
+  Note: '''
+  {
+    "description": "Example project for lark-dbml parser",
+    "contact": {
+      "name": "Austin Huynh",
+      "url": "contact@austinhuynh.me"
+    }
+  }
+  '''
+}
+
+Enum "example"."answer" {
+  "n/a" [note: 'Not applicable']
+  "yes" [note: '''
+          as known as
+          True
+        ''']
+  "no"  [note: '\'False\'']
+}
+
+TablePartial BaseTable {
+  id int [pk, increment]
+}
+
+Table "another"."user" [note: 'this is user table from another schema'] {
+  ~BaseTable
+  name varchar(255) [unique]
+  value decimal(12,4) [note:'''
+    {
+        "description": "a decimal value",
+        "minimum": 1.0,
+        "maximum": 9.0
+    }
+  ''']
+
+  indexes {
+    name [name: 'idx_user_name', unique]
+  }
+
+  Note: '''
+  {
+    "title": "Another User",
+    "config": {
+        "key1": "value1"
+    }
+  }
+  '''
+}
+
+Table "example"."option" {
+  ~BaseTable
+  seq int
+  content varchar(255)
+
+  indexes {
+    seq            [name: 'idx_option_seq']
+    (seq, content) [name: 'idx_option_seq_content', unique]
+  }
+}
+
+Table "example"."question" {
+  ~BaseTable
+  content varchar(255)
+  option_id int
+
+  indexes {
+    content [name: 'idx_question_content']
+  }
+}
+
+Table "example"."questionare" {
+  ~BaseTable
+  name varchar(255)
+  question_id int
+
+  indexes {
+    name [name: 'idx_questionare_name']
+  }
+}
+
+Table "example"."user_survey" {
+  id int [increment]
+  user_id int [ref: > "another"."user".id]
+  questionare_id int
+  submission_date timestamp [default: `now()`]
+  answer_given "example"."answer"
+
+  indexes {
+    (user_id, questionare_id) [pk]
+    submission_date           [name: 'idx_user_survey_submission_date']
+    answer_given              [name: 'idx_user_survey_answer_given']
+  }
+}
+
+Ref fk_questionare_question {
+  "example"."questionare".question_id > "example"."question".id [delete: cascade]
+}
+
+Ref fk_question_option {
+  "example"."question".option_id > "example"."option".id [update: no action]
+}
+
+Ref fk_user_survey_questionare {
+  "example"."user_survey".questionare_id > "example"."questionare".id
+}
+
+Note servers {
+  '''
+  {
+    "production": {
+      "type": "s3",
+      "environment": "prod",
+      "location": "s3://datacontract-example-orders-latest/v2/{model}/*.json",
+      "format": "json",
+      "delimiter": "new_line",
+      "description": "One folder per model. One file per day.",
+      "roles": [
+        {
+          "name": "analyst_us",
+          "description": "Access to the data for US region"
+        },
+        {
+          "name": "analyst_cn",
+          "description": "Access to the data for China region"
+        }
+      ]
+    }
+  }
+  '''
+}
+
+Note terms {
+  '''
+  {
+    "usage": "Data can be used for reports, analytics and machine learning use cases.\nOrder may be linked and joined by other tables",
+    "limitations": "Not suitable for real-time use cases.\nData may not be used to identify individual customers.\nMax data processing per day: 10 TiB",
+    "policies": [
+      {
+        "name": "privacy-policy",
+        "url": "https://example.com/privacy-policy"
+      },
+      {
+        "name": "license",
+        "description": "External data is licensed under agreement 1234.",
+        "url": "https://example.com/license/1234"
+      }
+    ],
+    "billing": "5000 USD per month",
+    "noticePeriod": "P3M"
+  }
+  '''
+}

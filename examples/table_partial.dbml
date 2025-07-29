@@ -1,17 +1,19 @@
 TablePartial base_template [headercolor: #ff0000] {
     id int [pk, not null]
+    is_active boolean [default: true]
     created_at timestamp [default: `now()`]
     updated_at timestamp [default: `now()`]
 }
 
 TablePartial soft_delete_template {
-    delete_status boolean [not null]
+    delete_status boolean [not null, default: false]
     deleted_at timestamp [default: `now()`]
 }
 
 TablePartial email_index {
-    email varchar(255) [unique]
-    value decimal(10,5)
+    email varchar(255)  [unique]
+    value decimal(10,5) [default: 10.2]
+    int_value integer [default: 100]
 
     indexes {
         email [unique, name: 'email_idx', type: 'hash', pk]
