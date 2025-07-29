@@ -1,7 +1,8 @@
 [project]
 name = "lark-dbml"
-version = "0.4.0"
+dynamic = ["version"]
 description = "DBML parser using Lark."
+keywords = ["dbml", "lark", "sql", "ddl", "data contract"]
 license = "MIT"
 authors = [
     { name = "Austin Huynh", email = "contact@austinhuynh.me" },
@@ -37,6 +38,9 @@ exclude = ["tests/**"]
 
 [tool.setuptools.package-data]
 "lark_dbml" = ["*.lark"]
+
+[tool.setuptools.dynamic]
+version = { attr = "lark_dbml.__version__.version" }
 
 [dependency-groups]
 dev = [
