@@ -41,7 +41,7 @@ A Python parser for [Database Markup Language (DBML)](https://dbml.dbdiagram.io)
 - [x] DBML Parser - Earley
 - [x] SQL Converter
 - [x] DBML Converter
-- [ ] Data Contract Converter
+- [x] Data Contract Converter
 - [ ] Generate DBML from a database connection string
 - [ ] Optimised DBML Parser - LALR(1)
 - [ ] CLI
@@ -212,7 +212,53 @@ sql = to_sql(diagram, Dialects.POSTGRES)
 
 #### Data Contract
 
-**TBA**
+Convert DBML diagram to a [Data Contract](https://datacontract.com) spec file. The basic usage just convert tables and columns to "model" and "definition" sections. However, `lark-dbml` supports settings to extract more information from a DBML - please expand Advanced Usage.
+
+<details>
+<summary>Basic example</summary>
+
+```python
+from lark_dbml import load
+from lark_dbml.converter import to_data_contract
+
+# Load DBML diagram
+diagram = load("diagram.dbml")
+
+# Convert to SQL for PostgreSQL
+data_contract = to_data_contract(diagram)
+```
+
+</details>
+
+<details>
+<summary>Advanced Usage</summary>
+
+You can leverage Sticky Notes in DBML to store information about "terms" and "servers" in JSON or YAML format. Then, you can set `note_as_fields` in the settings to parse and include those information in the generated contract. Here is the example
+
+```python
+import json
+from lark_dbml import load
+from lark_dbml.converter import to_data_contract
+from lark_dbml.converter.datacontract import DataContractConverterSettings
+
+# complex_datacontract.dbml inside the exmaples folder in this repo
+diagram = load('examples/complex_datacontract.dbml')
+
+# project_as_info: properties in Project are put into "info"
+# note_as_description: note in Table Settings is treated as model description.
+# note_as_fields: inline note in Table is parsed and extends the corresponding model's properties.
+# deserialization_func is required once note_as_fields is set. This is the function to parse the content inside an inline note. In this example, it's JSON
+
+data_contract = to_data_contract(diagram=diagram,
+                       settings=DataContractConverterSettings(
+                        project_as_info=True,
+                        note_as_description=True,
+                        note_as_fields=True,
+                        deserialization_func=json.loads
+                       ))
+```
+
+</details>
 
 ## Development
 
