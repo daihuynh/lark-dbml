@@ -21,8 +21,6 @@
 * [Development](#development)
 * [License](#license)
 
-> The parser is currently on alpha stage. It doesn't have any tests or docstrings yet.
-
 A Python parser for [Database Markup Language (DBML)](https://dbml.dbdiagram.io) built with the powerful LARK parsing toolkit, utilizing the Earley algorithm for robust and flexible parsing.
 
 ## Features
