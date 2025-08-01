@@ -162,7 +162,7 @@ class IndexSettings(Settings, Noteable):
     Settings for an index, including type, uniqueness, and primary key status.
     """
 
-    idx_type: Literal["btree", "hash"] | None = Field(default=None, alias="type")
+    idx_type: str | None = Field(default=None, alias="type")
     name: str | None = None
     is_unique: bool = False
     is_primary_key: bool = False
