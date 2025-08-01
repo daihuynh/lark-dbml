@@ -1,4 +1,15 @@
 <!-- insertion marker -->
+## [v0.5.1](https://github.com/daihuynh/lark-dbml/releases/tag/v0.5.1) - 2025-08-01
+
+<small>[Compare with v0.5.0](https://github.com/daihuynh/lark-dbml/compare/v0.5.0...v0.5.1)</small>
+
+### Code Refactoring
+- relax validation rules for index types by in [#14](https://github.com/daihuynh/lark-dbml/pull/14)
+
+### New Contributors
+- [@skarndev](https://github.com/skarndev) made their first contribution in [#14](https://github.com/daihuynh/lark-dbml/pull/14)
+
+
 ## [v0.5.0](https://github.com/daihuynh/lark-dbml/releases/tag/v0.5.0) - 2025-07-29
 
 <small>[Compare with v0.4.0](https://github.com/daihuynh/lark-dbml/compare/v0.4.0...v0.5.0)</small>
