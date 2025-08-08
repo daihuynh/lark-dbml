@@ -4,8 +4,8 @@ from lark_dbml.converter import to_data_contract
 from lark_dbml.converter.datacontract import DataContractConverterSettings
 
 
-def test_datacontract(example_path, expectation_path):
-    diagram = load(example_path / "complex_datacontract.dbml")
+def test_datacontract(example_path, expectation_path, standalone, parser):
+    diagram = load(example_path / "complex_datacontract.dbml", standalone, parser)
 
     datacontract = to_data_contract(diagram)
 
@@ -15,8 +15,10 @@ def test_datacontract(example_path, expectation_path):
     assert datacontract == expectation
 
 
-def test_datacontract_note_as_desc_settings(example_path, expectation_path):
-    diagram = load(example_path / "complex_datacontract.dbml")
+def test_datacontract_note_as_desc_settings(
+    example_path, expectation_path, standalone, parser
+):
+    diagram = load(example_path / "complex_datacontract.dbml", standalone, parser)
 
     datacontract = to_data_contract(
         diagram,
@@ -32,8 +34,8 @@ def test_datacontract_note_as_desc_settings(example_path, expectation_path):
     assert datacontract == expectation
 
 
-def test_datacontract_full_settings(example_path, expectation_path):
-    diagram = load(example_path / "complex_datacontract.dbml")
+def test_datacontract_full_settings(example_path, expectation_path, standalone, parser):
+    diagram = load(example_path / "complex_datacontract.dbml", standalone, parser)
 
     datacontract = to_data_contract(
         diagram,
