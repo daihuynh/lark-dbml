@@ -3,8 +3,8 @@ from io import StringIO
 from lark_dbml import load, dump, dumps
 
 
-def test_dump(example_path):
-    diagram = load(example_path / "project.dbml")
+def test_dump(example_path, standalone, parser):
+    diagram = load(example_path / "project.dbml", standalone, parser)
     dbml = dumps(diagram)
 
     assert (
@@ -20,8 +20,8 @@ def test_dump(example_path):
     )
 
 
-def test_dumps(example_path):
-    diagram = load(example_path / "project.dbml")
+def test_dumps(example_path, standalone, parser):
+    diagram = load(example_path / "project.dbml", standalone, parser)
     with StringIO() as f:
         dump(diagram, file=f)
         dbml = f.getvalue()

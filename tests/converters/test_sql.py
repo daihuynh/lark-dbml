@@ -2,8 +2,8 @@ from lark_dbml import load
 from lark_dbml.converter import to_sql
 
 
-def test_sql(example_path, expectation_path):
-    diagram = load(example_path / "complex.dbml")
+def test_sql(example_path, expectation_path, standalone, parser):
+    diagram = load(example_path / "complex.dbml", standalone, parser)
 
     sql = to_sql(diagram)
 

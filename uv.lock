@@ -421,11 +421,13 @@ wheels = [
 name = "lark-dbml"
 source = { editable = "." }
 dependencies = [
-    { name = "lark" },
     { name = "pydantic" },
 ]
 
 [package.optional-dependencies]
+lark = [
+    { name = "lark" },
+]
 sql = [
     { name = "sqlglot" },
 ]
@@ -441,11 +443,11 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "lark", specifier = ">=1.2.2" },
+    { name = "lark", marker = "extra == 'lark'", specifier = ">=1.2.2" },
     { name = "pydantic", specifier = "~=2.11" },
     { name = "sqlglot", marker = "extra == 'sql'", specifier = ">=27.0.0" },
 ]
-provides-extras = ["sql"]
+provides-extras = ["sql", "lark"]
 
 [package.metadata.requires-dev]
 dev = [

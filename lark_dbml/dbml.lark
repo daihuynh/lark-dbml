@@ -1,20 +1,19 @@
-
 start: (project | table | table_partial | reference | enum | note | group)+
 
 // 1. Forms
 project: "project"i name "{" pair+ "}"
-enum: "enum"i name "{" enum_value+ "}"
-reference: "ref"i name? "{" ref settings? "}"
-         | "ref"i name? ":" ref settings?
-group: "tablegroup"i name settings? "{" (name | note_inline)* "}"
+enum: "enum"i qualified_name "{" enum_value+ "}"
+reference: "ref"i name? "{" ref ref_settings? "}"
+         | "ref"i name? ":" ref ref_settings?
+group: "tablegroup"i name settings? "{" (qualified_name | note_inline)* "}"
 note: "note"i name "{" (STRING | MULTILINE_STRING) "}"
 table_partial: "TablePartial"i name settings? "{" column* indexes? "}"
-table: "table"i name alias? settings? "{" (column | table_partial_ref | note_inline | indexes)* "}"
-
+table: "table"i qualified_name alias? settings? "{" (column | table_partial_ref | note_inline | indexes)* "}"
 
 // 2. Common
-name: (IDENTIFIER | STRING)
-     | (IDENTIFIER | STRING) "." (IDENTIFIER | STRING)
+name: IDENTIFIER | STRING
+
+?qualified_name: (name ".")? name
 
 ?pair: key ":" value
 
@@ -26,41 +25,32 @@ name: (IDENTIFIER | STRING)
       | NUMBER
       | FUNC_EXP
       | COLOR_HEX
-      | REFERENTIAL_ACTION
 
 ?key: (IDENTIFIER | STRING)
 
-
-settings: "[" (pair ",")* pair "]"
+settings: "[" pair ("," pair)* "]"
 
 // 3. Components
 ?table_partial_ref: "~" IDENTIFIER
 
-alias: "as" IDENTIFIER
+alias: "as" (IDENTIFIER | STRING)
 
-column: (IDENTIFIER | STRING) (data_type | name)  column_settings?
+column: name data_type column_settings?
 
-data_type: value ("(" (INT ",")? INT ")")?
+data_type: (IDENTIFIER | STRING) ("(" (INT ",")? INT ")")?
+         | (IDENTIFIER | STRING) "." (IDENTIFIER | STRING)
 
 column_settings: "[" (column_setting ",")* column_setting "]"
 
 column_setting: column_constraint
-              | pair
               | "ref" ":" ref_inline
+              | pair
 
-column_constraint: "primary key" -> is_primary_key
-                  | "pk" -> is_primary_key
-                  | "null" -> is_null
-                  | "not null" -> is_not_null
-                  | "unique" -> is_unique
-                  | "increment" -> is_increment
-
-ref: name"."ref_col ref_inline
-
-?ref_inline: RELATIONSHIP name"."ref_col
-
-?ref_col: (IDENTIFIER | STRING)
-        | "(" ((IDENTIFIER | STRING) ",")* (IDENTIFIER | STRING) ")"
+column_constraint: CSTR_PK -> is_primary_key
+                 | CSTR_NOT_NULL -> is_not_null
+                 | CSTR_UNIQUE -> is_unique
+                 | CSTR_INCREMENT -> is_increment
+                 | CSTR_NULL -> is_null
 
 indexes: "indexes"i "{" index+ "}"
 
@@ -69,16 +59,37 @@ index: index_exp column_settings?
 ?index_exp: (FUNC_EXP | IDENTIFIER | STRING)
           | "(" ((FUNC_EXP | IDENTIFIER | STRING) ",")* (FUNC_EXP | IDENTIFIER | STRING) ")"
 
+ref: table_ref ref_inline
+
+?ref_inline: RELATIONSHIP table_ref
+
+ref_settings: "[" (ref_setting ",")* ref_setting "]" -> settings
+
+?ref_setting: key ":" REFERENTIAL_ACTION -> pair
+            | pair
+
+?column_list: "(" (name ",")* name ")"
+
+?table_ref: (name ".")? name "." column_list
+          | (name ".")? name "." name
+
 enum_value: key settings?
 
 note_inline: "note"i ":" (MULTILINE_STRING | STRING)
 
 // --- Terminal Definitions (The actual text patterns) ---
+CSTR_PK.1: /primary\s+key/i
+       | "pk"i
+CSTR_NOT_NULL.1: /not\s+null/i
+CSTR_NULL: "null"
+CSTR_UNIQUE: "unique"
+CSTR_INCREMENT: "increment"
+
 REFERENTIAL_ACTION: "cascade"
                   | "restrict"
-                  | "set null"
-                  | "set default"
-                  | "no action"
+                  | /set\s+null/i
+                  | /set\s+default/i
+                  | /no\s+action/i
 
 RELATIONSHIP: "-" | "<" | ">" | "<>"
 IDENTIFIER: /[a-zA-Z_][a-zA-Z0-9_]*/

@@ -1,9 +1,9 @@
 from lark_dbml import load
 
 
-def test_project(example_path):
+def test_project(example_path, standalone, parser):
     with open(example_path / "project.dbml") as f:
-        diagram = load(f)
+        diagram = load(f, standalone, parser)
 
     assert diagram.project
 
@@ -14,8 +14,8 @@ def test_project(example_path):
     assert project.note == ("Version: 1.0.0\n        Release: 01/01/2025")
 
 
-def test_reference(example_path):
-    diagram = load(example_path / "ref.dbml")
+def test_reference(example_path, standalone, parser):
+    diagram = load(example_path / "ref.dbml", standalone, parser)
 
     assert len(diagram.references) == 3
 
@@ -54,8 +54,8 @@ def test_reference(example_path):
     assert ref.settings.color == "#0f0"
 
 
-def test_enum(example_path):
-    diagram = load(example_path / "enum.dbml")
+def test_enum(example_path, standalone, parser):
+    diagram = load(example_path / "enum.dbml", standalone, parser)
 
     assert len(diagram.enums) == 2
 
@@ -79,8 +79,8 @@ def test_enum(example_path):
     assert enum.values[3].value == "Not Yet Set"
 
 
-def test_table_group(example_path):
-    diagram = load(example_path / "table_group.dbml")
+def test_table_group(example_path, standalone, parser):
+    diagram = load(example_path / "table_group.dbml", standalone, parser)
 
     assert len(diagram.table_groups) == 2
 
@@ -102,8 +102,8 @@ def test_table_group(example_path):
     assert group.note == "Contains tables that are related to e-commerce system"
 
 
-def test_sticky_note(example_path):
-    diagram = load(example_path / "sticky_note.dbml")
+def test_sticky_note(example_path, standalone, parser):
+    diagram = load(example_path / "sticky_note.dbml", standalone, parser)
 
     assert len(diagram.sticky_notes) == 2
     assert diagram.sticky_notes[0].name == "single_line_note"
@@ -114,8 +114,8 @@ def test_sticky_note(example_path):
     )
 
 
-def test_table_partial(example_path):
-    diagram = load(example_path / "table_partial.dbml")
+def test_table_partial(example_path, standalone, parser):
+    diagram = load(example_path / "table_partial.dbml", standalone, parser)
 
     assert len(diagram.table_partials) == 3
     table = diagram.table_partials[0]
@@ -171,8 +171,8 @@ def test_table_partial(example_path):
     assert table.indexes[1].columns == ["`sum(value)`", "email"]
 
 
-def test_table(example_path):
-    diagram = load(example_path / "table.dbml")
+def test_table(example_path, standalone, parser):
+    diagram = load(example_path / "table.dbml", standalone, parser)
 
     assert len(diagram.tables) == 2
     assert len(diagram.table_partials) == 2

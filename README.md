@@ -25,14 +25,16 @@ A Python parser for [Database Markup Language (DBML)](https://dbml.dbdiagram.io)
 
 ## Features
 
-* **DBML Parsing:** Accurately parses DBML files using an EBNF grammar defined for Lark.
-* **Earley Parser:** Utilizes Lark's Earley parser for efficient and flexible parsing.
+* **High-Performance:** `lark-dbml` supports both the Earley and LALR(1) algorithms. The LALR(1) algorithm in `lark` has the best performance compared to Parsimonious, PyParsing, and ANTLR, according to [lark](https://github.com/lark-parser/lark).
+* **Standalone Mode:** the package does not require `lark` package by default. The whole parsing is packed in a single Python file generated from the EBNF grammar file.
+* **Standalone Mode:** fully support [DBML latest specification - April 2025](https://docs.dbdiagram.io/release-notes/).
 * **Pydantic Validation:** Ensures the parsed DBML data conforms to a well-defined structure using Pydantic 2.11, providing reliable data integrity.
 * **Structured Output:** Generates Python objects representing your DBML diagram, making it easy to programmatically access and manipulate your database schema.
 * **Future-Proof:** the parser accepts any properties or settings that are not defined in the DBML spec.
-* **Support multiple converters**:
-  * **SQL**: convert Pydantic output model to SQL with SQLGlot.
-  * **DBML**: convert Pydantic model to DBML.
+* **Powerful Conversion & Tooling**:
+  * **DBML Round-Trip**: The package supports full round-trip conversion, allowing to parse DBML, programmatically manipulate the Pydantic models, and then generate the DBML back out.
+  * **SQL**: convert Pydantic output model to SQL with [sqlglot](https://github.com/tobymao/sqlglot).
+  * **Data Contract**: Transform your DBML models into [data contract specification](https://datacontract.com).
 
 ## Milestones
 
@@ -40,14 +42,19 @@ A Python parser for [Database Markup Language (DBML)](https://dbml.dbdiagram.io)
 - [x] SQL Converter
 - [x] DBML Converter
 - [x] Data Contract Converter
-- [ ] Generate DBML from a database connection string
-- [ ] Optimised DBML Parser - LALR(1)
-- [ ] CLI
+- [x] Optimised DBML Parser - LALR(1)
+- [ ] CLI - TBD
+- [ ] Generate DBML from a database connection string - TBD
 
 ## Installation
 
 You can install lark-dbml using pip:
 
+```bash
+pip install lark-dbml
+```
+
+To use `lark` mode when `standalone_mode` is set as False in the `load` function
 ```bash
 pip install lark-dbml
 ```
@@ -76,7 +83,7 @@ class Diagram(BaseModel):
 
 ### Parser
 
-lark-dbml uses the same API as other parser packages in Python.
+lark-dbml uses the same API as other parser packages in Python. The default option is `standalone` mode with `LALR(1)` algorithm. Beside default parameters, `load` and `loads` accept any options used by the Lark parser, which can be found at this [link](https://github.com/lark-parser/lark/blob/d1a456dd365603bbcb4b5b4ec2c29e6096b82f59/lark/lark.py#L47)
 
 #### Load DBML
 
@@ -107,7 +114,12 @@ Table "posts" {
 Ref: posts.user_id > users.id
 """
 
+# Default option
 diagram = loads(dbml)
+# Change to Lark mode
+diagram = loads(dbml, standalone_mode=False)
+# Switch to Earley algorithm
+diagram = loads(dbml, parser="earley")
 
 # 2. Read from a file
 diagram = load('example.dbml')
