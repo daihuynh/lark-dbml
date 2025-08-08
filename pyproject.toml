@@ -2,7 +2,7 @@
 name = "lark-dbml"
 dynamic = ["version"]
 description = "DBML parser using Lark."
-keywords = ["dbml", "lark", "sql", "ddl", "data contract"]
+keywords = ["dbml", "lark", "sql", "ddl", "data contract", "pydantic", "parser", "lalr", "earley", "standalone"]
 license = "MIT"
 authors = [
     { name = "Austin Huynh", email = "contact@austinhuynh.me" },
@@ -18,7 +18,6 @@ classifiers = [
     "Topic :: Software Development :: Code Generators",
 ]
 dependencies = [
-    "lark>=1.2.2",
     "pydantic~=2.11",
 ]
 
@@ -26,10 +25,23 @@ dependencies = [
 sql = [
     "sqlglot>=27.0.0",
 ]
+lark = [
+    "lark>=1.2.2",
+]
 
 [build-system]
 requires = ["setuptools>=61.0", "wheel"] # Add wheel as well, it's often needed
 build-backend = "setuptools.build_meta"
+
+[tool.coverage.run]
+omit = [
+    "lark_dbml/lark_dbml_standalone.py"
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pass"
+]
 
 [tool.setuptools.packages.find]
 where = ["."]
