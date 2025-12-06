@@ -1,5 +1,7 @@
 from textwrap import dedent
-from lark_dbml import Diagram, DBMLConverterSettings
+
+from lark_dbml import DBMLConverterSettings, Diagram
+from lark_dbml.converter import to_dbml
 from lark_dbml.schema import (
     Column,
     ColumnSettings,
@@ -21,7 +23,7 @@ from lark_dbml.schema import (
     TableSettings,
 )
 
-from lark_dbml.converter import to_dbml
+from ..utils import compare_output
 
 
 def test_project():
@@ -33,15 +35,15 @@ def test_project():
 
     dbml = to_dbml(diagram)
 
-    assert (
-        dbml
-        == r"""Project Example {
+    assert compare_output(
+        dbml,
+        r"""Project Example {
     Version: '1.0.0'
     database_type: 'Generic'
     note: 'It\'s a note'
 }
 
-"""
+""",
     )
 
 
@@ -73,9 +75,9 @@ def test_enum():
         ]
     )
     dbml = to_dbml(diagram, settings=DBMLConverterSettings(allow_extra=True))
-    assert (
-        dbml
-        == """Enum "my schema"."status" {
+    assert compare_output(
+        dbml,
+        """Enum "my schema"."status" {
     "n/a"
     yes [note: 'or True']
     no [note: 'or False']
@@ -88,7 +90,7 @@ False
 ''', server_note: 'Do not implement']
 }
 
-"""
+""",
     )
 
 
@@ -107,9 +109,9 @@ def test_reference():
     )
 
     dbml = to_dbml(diagram, settings=DBMLConverterSettings(allow_extra=True))
-    assert (
-        dbml
-        == "Ref: TableA.Id - schemaB.TableB.TableAId [note: 'This is not valid in DBML yet!']\n\n"
+    assert compare_output(
+        dbml,
+        "Ref: TableA.Id - schemaB.TableB.TableAId [note: 'This is not valid in DBML yet!']\n\n",
     )
 
     diagram = Diagram(
@@ -127,9 +129,9 @@ def test_reference():
     )
 
     dbml = to_dbml(diagram)
-    assert (
-        dbml
-        == 'Ref fk_TableC_TablD_Id_Value: "my schema"."TableC".(Id,Value) - "your schema"."TableD".(CId,CValue) [color: #F00, delete: cascade]\n\n'
+    assert compare_output(
+        dbml,
+        'Ref fk_TableC_TablD_Id_Value: "my schema"."TableC".(Id,Value) - "your schema"."TableD".(CId,CValue) [color: #F00, delete: cascade]\n\n',
     )
 
 
@@ -148,9 +150,9 @@ This string can spans over multiple lines.
     )
 
     dbml = to_dbml(diagram)
-    assert (
-        dbml
-        == r"""Note single_line_note {
+    assert compare_output(
+        dbml,
+        r"""Note single_line_note {
 'This \' should be quoted'
 }
 
@@ -161,7 +163,7 @@ This string can spans over multiple lines.
 '''
 }
 
-"""
+""",
     )
 
 
@@ -179,14 +181,14 @@ def test_table_group():
     )
 
     dbml = to_dbml(diagram)
-    assert (
-        dbml
-        == """TableGroup "group A" {
+    assert compare_output(
+        dbml,
+        """TableGroup "group A" {
     "my schema"."TableC"
     TableA
 }
 
-"""
+""",
     )
 
 
@@ -241,9 +243,9 @@ def test_table_partial():
     )
 
     dbml = to_dbml(diagram, DBMLConverterSettings(allow_extra=True))
-    assert (
-        dbml
-        == """TablePartial "my table" {
+    assert compare_output(
+        dbml,
+        """TablePartial "my table" {
     id int [pk, increment]
     some_status public.status [null, default: "yes"]
     fkey "super string" [ref: - "your schema"."your table".superid, not null, unique]
@@ -252,7 +254,7 @@ def test_table_partial():
     to_date datetime [null, comment: 'column metadata', default: `getdate()`]
 }
 
-"""
+""",
     )
 
 
@@ -321,9 +323,9 @@ def test_table():
     )
 
     dbml = to_dbml(diagram, settings=DBMLConverterSettings(allow_extra=True))
-    assert (
-        dbml
-        == """TablePartial header {
+    assert compare_output(
+        dbml,
+        """TablePartial header {
     name varchar(50)
 }
 
@@ -344,5 +346,5 @@ Table body as full_table [note: 'header note', headercolor: #3498DB, partitioned
     Note: 'Incorporated with header and footer'
 }
 
-"""
+""",
     )
