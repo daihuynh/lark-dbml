@@ -7,7 +7,8 @@ CREATE TYPE example.answer AS ENUM ('n/a','yes','no');
 CREATE TABLE "another"."user" (
   "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   "name" VARCHAR(255) UNIQUE,
-  "value" DECIMAL(12, 4)
+  "value" DECIMAL(12, 4) CHECK (value > 0),
+  CONSTRAINT chk_name_length CHECK (LENGTH("name") <= 255)
 );
 
 CREATE UNIQUE INDEX "idx_user_name" ON "another"."user"("name");
@@ -46,12 +47,12 @@ CREATE INDEX "idx_questionare_name" ON "example"."questionare"("name");
 
 CREATE TABLE "example"."user_survey" (
   "id" INT GENERATED ALWAYS AS IDENTITY,
-  "user_id" INT NULL REFERENCES "another"."user" (
+  "user_id" INT REFERENCES "another"."user" (
     "id"
   ),
   "questionare_id" INT,
-  "submission_date" TIMESTAMP NULL DEFAULT now(),
-  "answer_given" example.answer,
+  "submission_date" TIMESTAMP DEFAULT now(),
+  "answer_given" example.answer NOT NULL,
   CONSTRAINT fk_user_survey_questionare FOREIGN KEY ("questionare_id") REFERENCES "example"."questionare" (
     "id"
   ),
