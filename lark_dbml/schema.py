@@ -141,11 +141,12 @@ class ColumnSettings(Settings, Noteable):
     """
 
     is_primary_key: bool = False
-    is_null: bool = True
+    is_null: bool | None = None
     is_unique: bool = False
     is_increment: bool = False
     default: Any | None = None
     ref: ReferenceInline | None = None
+    checks: List[str] | None = None
 
 
 class Column(Name):
@@ -179,6 +180,23 @@ class Index(BaseModel):
     settings: IndexSettings | None = None
 
 
+class CheckSettings(Settings, Noteable):
+    """
+    Settings for a check, including name and expression.
+    """
+
+    name: str | None = None
+
+
+class Check(BaseModel):
+    """
+    Represents a table check, including expression and settings.
+    """
+
+    expression: str
+    settings: CheckSettings | None = None
+
+
 class TableSettings(Settings, Noteable):
     """
     Settings for a table, including header color and notes.
@@ -196,6 +214,7 @@ class TablePartial(Name):
 
     columns: List[Column]
     indexes: List[Index] | None = None
+    checks: List[Check] | None = None
     settings: TableSettings | None = None
 
 

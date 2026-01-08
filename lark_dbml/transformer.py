@@ -347,7 +347,12 @@ def create_dbml_transformer(Transformer, Token, v_args):
                 if isinstance(pair, dict):
                     settings.update(pair)
                 else:
-                    pairs.append(pair)
+                    if pair[0] == "check":
+                        checks = settings.get("checks", [])
+                        checks.append(pair[1])
+                        settings["checks"] = checks
+                    else:
+                        pairs.append(pair)
             if pairs:
                 settings.update(dict(pairs))
             return {"settings": settings}
@@ -378,6 +383,17 @@ def create_dbml_transformer(Transformer, Token, v_args):
                 data = {"columns": columns}
             if settings:
                 data.update(settings[0])
+            return data
+
+        @v_args(inline=True)
+        @log_transform
+        def check(self, exp, *settings):
+            """
+            Constructs an index dictionary from columns and settings.
+            """
+            data = {"expression": exp}
+            if settings:
+                data["settings"] = {"name": settings[0]}
             return data
 
         @v_args(inline=True)
