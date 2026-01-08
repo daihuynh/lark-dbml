@@ -10,8 +10,11 @@ class ColumnConverter(BaseMermaidConverter[Column]):
         parts = []
 
         # Type
-        if node.data_type and node.data_type.sql_type:
-            parts.append(node.data_type.sql_type)
+        # node.data_type can be DataType or Name
+        if hasattr(node.data_type, 'sql_type'):
+             parts.append(node.data_type.sql_type)
+        elif hasattr(node.data_type, 'name'): # Fallback if it's a Name (e.g. enum reference)
+             parts.append(node.data_type.name)
         else:
             parts.append("unknown")
 
