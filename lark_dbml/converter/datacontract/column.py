@@ -51,7 +51,7 @@ class ColumnConverter(BaseDataContractConverter[Column]):
                     kv["definitions"][column.name]["description"] = settings.note
             if settings.is_primary_key:
                 kv["fields"][column.name]["primaryKey"] = True
-            if not settings.is_null:
+            if settings.is_null is False:
                 kv["fields"][column.name]["required"] = True
             if settings.is_unique:
                 kv["fields"][column.name]["unique"] = True
