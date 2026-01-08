@@ -100,6 +100,25 @@ class TableConverter(BaseSQLConverter[Table]):
                     self.composite_pk_converter.convert(composite_pk_index)
                 )
 
+        # Constraints: Checks
+        if table.checks:
+            for check in table.checks:
+                constraint_defs.append(
+                    exp.ColumnConstraint(
+                        this=(
+                            exp.Identifier(this=check.settings.name, quoted=False)
+                            if check.settings
+                            else None
+                        ),
+                        kind=exp.CheckColumnConstraint(
+                            this=exp.Literal(
+                                this=check.expression.strip("`"),
+                                is_string=False,
+                            )
+                        ),
+                    )
+                )
+
         table_def = exp.Create(
             this=exp.Schema(
                 this=exp.Table(

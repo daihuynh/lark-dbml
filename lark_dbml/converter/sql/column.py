@@ -57,29 +57,44 @@ class ColumnConverter(BaseSQLConverter[Column]):
                 exp.ColumnConstraint(kind=exp.PrimaryKeyColumnConstraint())
             )
         # Only set NULL or NOT NULL if the column is not a primary key
-        if not (settings.is_primary_key or settings.is_increment or settings.is_unique):
+        if settings.is_null is not None:
             constraints.append(
                 exp.ColumnConstraint(
                     kind=exp.NotNullColumnConstraint(allow_null=settings.is_null)
                 )
             )
         # Default value
-        if settings.default:
+        if settings.default is not None:
             is_func_exp = isinstance(settings.default, str) and "`" in settings.default
             default_value = (
                 settings.default if not is_func_exp else settings.default.strip("`")
             )
+            is_string_literal = isinstance(default_value, str) and not is_func_exp
             constraints.append(
                 exp.ColumnConstraint(
                     kind=exp.DefaultColumnConstraint(
                         this=exp.Literal(
-                            this=default_value,
-                            is_string=isinstance(default_value, str)
-                            and not is_func_exp,
+                            this=default_value
+                            if is_string_literal
+                            else str(default_value),
+                            is_string=is_string_literal,
                         )
                     )
                 )
             )
+        # Checks:
+        if settings.checks:
+            for check in settings.checks:
+                constraints.append(
+                    exp.ColumnConstraint(
+                        kind=exp.CheckColumnConstraint(
+                            this=exp.Literal(
+                                this=check.strip("`"),
+                                is_string=False,
+                            )
+                        )
+                    )
+                )
         # Reference
         if settings.ref:
             constraints.append(
