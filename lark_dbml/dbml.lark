@@ -7,8 +7,8 @@ reference: "ref"i name? "{" ref ref_settings? "}"
          | "ref"i name? ":" ref ref_settings?
 group: "tablegroup"i name settings? "{" (qualified_name | note_inline)* "}"
 note: "note"i name "{" (STRING | MULTILINE_STRING) "}"
-table_partial: "TablePartial"i name settings? "{" column* indexes? "}"
-table: "table"i qualified_name alias? settings? "{" (column | table_partial_ref | note_inline | indexes)* "}"
+table_partial: "TablePartial"i name settings? "{" column* indexes? checks? "}"
+table: "table"i qualified_name alias? settings? "{" (column | table_partial_ref | note_inline | indexes | checks)* "}"
 
 // 2. Common
 name: IDENTIFIER | STRING
@@ -51,6 +51,10 @@ column_constraint: CSTR_PK -> is_primary_key
                  | CSTR_UNIQUE -> is_unique
                  | CSTR_INCREMENT -> is_increment
                  | CSTR_NULL -> is_null
+
+checks: "checks"i "{" check+ "}"
+
+check: FUNC_EXP ("[" "name"i ":" STRING "]")?
 
 indexes: "indexes"i "{" index+ "}"
 
