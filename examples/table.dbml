@@ -3,7 +3,7 @@ Table TableA [note: 'This is table A'] {
   BId            varchar(10)   [ref: > TableB.Id]
   Name           "super string"  [unique, note: 'Name']
   IntValue       integer       [null, note: 'Integer Value']
-  DecimalValue   decimal(10,2) [default: 10.24]
+  DecimalValue   decimal(10,2) [default: 10.24, check: `value > 0`, check: `value < 100`]
   DateValue      date
   DateTimeValue  datetime
 }
@@ -14,6 +14,11 @@ TablePartial TableB [headercolor: #3498DB] {
 
 TablePartial TableC {
   IntValue        integer   [ref: - TableA.IntValue]
+
+  checks {
+    `IntValue > 0` [name: 'chk_non_zero']
+    `IntValue < 100`
+  }
 }
 
 Table "schema1"."Table D" as D {

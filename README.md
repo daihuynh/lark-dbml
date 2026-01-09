@@ -33,15 +33,17 @@ A Python parser for [Database Markup Language (DBML)](https://dbml.dbdiagram.io)
 * **Future-Proof:** the parser accepts any properties or settings that are not defined in the DBML spec.
 * **Powerful Conversion & Tooling**:
   * **DBML Round-Trip**: The package supports full round-trip conversion, allowing to parse DBML, programmatically manipulate the Pydantic models, and then generate the DBML back out.
-  * **SQL**: convert Pydantic output model to SQL with [sqlglot](https://github.com/tobymao/sqlglot).
+  * **SQL**: Convert between DBML and SQL (DDL) using [sqlglot](https://github.com/tobymao/sqlglot). Supports both `to_sql` and `from_sql`.
+  * **Mermaid**: Convert DBML to Mermaid.js ERD diagrams.
   * **Data Contract**: Transform your DBML models into [data contract specification](https://datacontract.com).
 
 ## Milestones
 
 - [x] DBML Parser - Earley
-- [x] SQL Converter
+- [x] SQL Converter (Round-trip)
 - [x] DBML Converter
 - [x] Data Contract Converter
+- [x] Mermaid Converter
 - [x] Optimised DBML Parser - LALR(1)
 - [ ] CLI - TBD
 - [ ] Generate DBML from a database connection string - TBD

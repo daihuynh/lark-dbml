@@ -20,10 +20,14 @@ TablePartial BaseTable {
 Table "another"."user" {
   ~BaseTable
   name varchar(255) [unique]
-  value decimal(12,4)
+  value decimal(12,4) [check: `value > 0`]
 
   indexes {
     name [name: 'idx_user_name', unique]
+  }
+
+  checks {
+    `LENGTH("name") <= 255` [name: 'chk_name_length']
   }
 }
 
@@ -63,7 +67,7 @@ Table "example"."user_survey" {
   user_id int [ref: > "another"."user".id]
   questionare_id int
   submission_date timestamp [default: `now()`]
-  answer_given "example"."answer"
+  answer_given "example"."answer" [not null]
 
   indexes {
     (user_id, questionare_id) [pk]

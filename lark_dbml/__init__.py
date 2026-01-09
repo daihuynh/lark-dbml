@@ -24,7 +24,7 @@ def load(
     standalone_mode=True,
     parser: Literal["earley", "lalr"] = "lalr",
     **lark_options,
-):
+) -> Diagram:
     """
     Load and parse a DBML diagram from a file path, file-like object, or string path.
 

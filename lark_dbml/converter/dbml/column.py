@@ -50,6 +50,7 @@ class ColumnConverter(BaseDBMLConverter[Column]):
         for field in ColumnSettings.model_fields:
             if (
                 ColumnSettings.model_fields[field].annotation is not bool
+                and ColumnSettings.model_fields[field].annotation != bool | None
                 and field != "ref"
                 and (value := getattr(settings, field)) is not None
             ):
@@ -72,10 +73,8 @@ class ColumnConverter(BaseDBMLConverter[Column]):
         if settings.is_primary_key:
             flags.append("pk")
         else:
-            if settings.is_null:
-                flags.append("null")
-            else:
-                flags.append("not null")
+            if settings.is_null is not None:
+                flags.append("null" if settings.is_null else "not null")
         if settings.is_unique:
             flags.append("unique")
         if settings.is_increment:

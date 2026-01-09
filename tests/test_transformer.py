@@ -210,6 +210,9 @@ def test_table(example_path, standalone, parser):
     assert table.columns[2].settings.is_unique
     assert table.columns[3].settings.is_null
     assert table.columns[4].settings.default == 10.24
+    assert len(table.columns[4].settings.checks) == 2
+    assert table.columns[4].settings.checks[0] == "`value > 0`"
+    assert table.columns[4].settings.checks[1] == "`value < 100`"
     # 1.4 Comments
     assert table.columns[2].settings.note == "Name"
     assert table.columns[3].settings.note == "Integer Value"
@@ -230,6 +233,11 @@ def test_table(example_path, standalone, parser):
     assert table.columns[0].data_type.sql_type == "integer"
     assert table.columns[0].settings.ref.to_table.name == "TableA"
     assert table.columns[0].settings.ref.to_columns == ["IntValue"]
+    assert len(table.checks) == 2
+    assert table.checks[0].expression == "`IntValue > 0`"
+    assert table.checks[0].settings.name == "chk_non_zero"
+    assert table.checks[1].expression == "`IntValue < 100`"
+    assert table.checks[1].settings is None
 
     # 4. TableC
     table = diagram.tables[1]

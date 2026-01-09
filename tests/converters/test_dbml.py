@@ -245,11 +245,11 @@ def test_table_partial():
         dbml
         == """TablePartial "my table" {
     id int [pk, increment]
-    some_status public.status [null, default: "yes"]
+    some_status public.status [default: "yes"]
     fkey "super string" [ref: - "your schema"."your table".superid, not null, unique]
     name varchar(50)
     value decimal(10,2)
-    to_date datetime [null, comment: 'column metadata', default: `getdate()`]
+    to_date datetime [comment: 'column metadata', default: `getdate()`]
 }
 
 """
@@ -328,14 +328,14 @@ def test_table():
 }
 
 TablePartial footer {
-    to_date timestamp [null, default: `now()`]
+    to_date timestamp [default: `now()`]
 }
 
 Table body as full_table [note: 'header note', headercolor: #3498DB, partitioned_by: 'id'] {
     ~header
     id int [pk, note: 'why is id behind name?']
     ~footer
-    audit_date timestamp [null, default: `getdate()`]
+    audit_date timestamp [default: `getdate()`]
     indexes {
         (id,name) [pk, note: 'This is not valid in DBML yet!']
         (`value*3`, `now()`) [unique, name: 'triple_value_now', type: hash]
