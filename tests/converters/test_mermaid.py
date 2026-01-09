@@ -1,6 +1,6 @@
-import os
 from lark_dbml import load, loads
 from lark_dbml.converter import to_mermaid
+
 
 def test_simple_table():
     dbml = """
@@ -21,6 +21,7 @@ users {
 """
     assert mermaid.strip() == expected.strip()
 
+
 def test_relationships():
     dbml = """
     Table users {
@@ -39,6 +40,7 @@ def test_relationships():
     # posts }o--|| users : "user_id - id"
     assert 'posts }o--|| users : "user_id - id"' in mermaid
 
+
 def test_enums_and_notes():
     dbml = """
     Enum status {
@@ -56,37 +58,12 @@ def test_enums_and_notes():
     assert "%%   - active" in mermaid
     assert "%% Note: This is a note" in mermaid
 
-def test_complex_dbml():
-    """Test converting the complex.dbml example file."""
-    # Construct path to examples/complex.dbml
-    # Assuming tests run from repo root
-    example_path = os.path.join("examples", "complex.dbml")
 
-    diagram = load(example_path)
+def test_complex_dbml(example_path, expectation_path, standalone, parser):
+    diagram = load(example_path / "complex.dbml", standalone, parser)
+
     mermaid = to_mermaid(diagram)
 
-    # Assertions to ensure major components are present
-    assert "erDiagram" in mermaid
-
-    # Check for Tables
-    assert '"another"."user" {' in mermaid
-    assert '"example"."option" {' in mermaid
-    assert '"example"."question" {' in mermaid
-    assert '"example"."questionare" {' in mermaid
-
-    # Check for Columns
-    assert "varchar name" in mermaid
-    assert "decimal value" in mermaid
-
-    # Check for Enum (as comment)
-    # The output seems to strip schema/quotes for enum name in convert
-    assert '%% Enum: answer' in mermaid
-    assert '%%   - n/a' in mermaid
-
-    # Check for Project note (as comment)
-    assert '%% Project: example' in mermaid
-
-    # Check for Relationships
-    # Ref fk_questionare_question: "example"."questionare".question_id > "example"."question".id
-    # "example"."questionare" }o--|| "example"."question" : "question_id - id"
-    assert '"example"."questionare" }o--|| "example"."question"' in mermaid
+    with open(expectation_path / "complex_mermaid.md") as f:
+        expectation = f.read()
+    assert mermaid == expectation

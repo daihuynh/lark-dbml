@@ -29,6 +29,9 @@ class Name(BaseModel):
     db_schema: str | None = None
     name: str | None = None
 
+    def __str__(self):
+        return f"{self.db_schema}.{self.name}" if self.db_schema else self.name
+
 
 # Project
 class Project(Name, Noteable):

@@ -31,12 +31,12 @@ class ReferenceConverter(BaseMermaidConverter[Reference]):
         # Left side
         table1 = node.from_table.name
         if node.from_table.db_schema:
-            table1 = f'"{node.from_table.db_schema}"."{node.from_table.name}"'
+            table1 = f'"{node.from_table.db_schema}.{node.from_table.name}"'
 
         # Right side
         table2 = node.to_table.name
         if node.to_table.db_schema:
-            table2 = f'"{node.to_table.db_schema}"."{node.to_table.name}"'
+            table2 = f'"{node.to_table.db_schema}.{node.to_table.name}"'
 
         # Build string
         # table1 symbol table2 : label

@@ -4,33 +4,29 @@ from .base import BaseMermaidConverter
 
 class ColumnConverter(BaseMermaidConverter[Column]):
     def convert(self, node: Column) -> str:
-        # Mermaid syntax: <type> <name> [PK|FK] ["comment"]
-        # Example: string id PK "Primary Key"
-
         parts = []
 
-        # Type
         # node.data_type can be DataType or Name
-        if hasattr(node.data_type, 'sql_type'):
-             parts.append(node.data_type.sql_type)
-        elif hasattr(node.data_type, 'name'): # Fallback if it's a Name (e.g. enum reference)
-             parts.append(node.data_type.name)
+        if hasattr(node.data_type, "sql_type"):
+            parts.append(node.data_type.sql_type)
+        # Fallback if it's a Name (e.g. enum reference)
+        elif hasattr(node.data_type, "name"):
+            parts.append(node.data_type.name)
         else:
             parts.append("unknown")
 
         # Name
         parts.append(node.name)
 
-        # PK/FK
+        # PK/FK/UK
         keys = []
         if node.settings:
             if node.settings.is_primary_key:
                 keys.append("PK")
-            # Note: Foreign keys are handled at the table level in DBML usually,
-            # or reference level. DBML doesn't strictly mark column as FK in settings
-            # unless it's an inline ref, but Mermaid ER allows FK marker.
-            # We'll check if we can easily detect FK.
-            # For now, let's stick to PK.
+            if node.settings.ref:
+                keys.append("FK")
+            if node.settings.is_unique:
+                keys.append("UK")
 
         if keys:
             parts.append(",".join(keys))

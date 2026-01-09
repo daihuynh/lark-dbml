@@ -25,14 +25,14 @@ class TableConverter(BaseMermaidConverter[Table]):
         # Handle schema in table name
         table_name = node.name
         if node.db_schema:
-            table_name = f'"{node.db_schema}"."{node.name}"'
+            table_name = f'"{node.db_schema}.{node.name}"'
 
-        if hasattr(node, 'alias') and node.alias:
-            # Mermaid handles aliases in relationships, but for entity definition
-            # usually the main name is used.
-            # Or "alias" could be the name displayed?
-            # For simplicity, use the name.
-            pass
+        if node.alias and self.settings.use_alias:
+            table_name = (
+                f"{table_name}[{node.alias}]"
+                if " " not in node.alias
+                else f'{table_name}["{node.alias}"]'
+            )
 
         lines.append(f"{table_name} {{")
 

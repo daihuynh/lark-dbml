@@ -38,14 +38,17 @@ class MermaidConverterSettings:
     def __init__(
         self,
         indent: str = " " * 4,
+        use_alias: bool = False,
     ):
         """
         Initialize MermaidConverterSettings.
 
         Args:
             indent: String used for indentation.
+            use_alias: Whether to use alias for table names if applicable.
         """
         self.indent = indent
+        self.use_alias = use_alias
 
 
 class BaseMermaidConverter(Generic[DBMLNode], ABC):
