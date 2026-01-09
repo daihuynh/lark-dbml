@@ -1,4 +1,18 @@
 <!-- insertion marker -->
+## [v0.7.0](https://github.com/daihuynh/lark-dbml/releases/tag/v0.7.0) - 2026-01-09
+
+<small>[Compare with v0.6.0](https://github.com/daihuynh/lark-dbml/compare/v0.6.0...v0.7.0)</small>
+
+### Features
+
+- **Mermaid Converter**: Added support for converting DBML to Mermaid diagrams.
+- **SQL Parsing**: Added support for parsing SQL DDL statements into DBML models (`from_sql`). This allows for round-trip conversion (SQL -> DBML -> SQL).
+- **Check Constraints**: Added support for Check constraints.
+
+### Improvements
+
+- **Test Coverage**: Significantly improved test coverage for SQL converter.
+
 ## [v0.6.0](https://github.com/daihuynh/lark-dbml/releases/tag/v0.6.0) - 2025-08-08
 
 <small>[Compare with v0.5.1](https://github.com/daihuynh/lark-dbml/compare/v0.5.1...v0.6.0)</small>
